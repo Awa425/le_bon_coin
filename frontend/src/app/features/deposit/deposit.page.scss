@@ -1,0 +1,274 @@
+.deposit {
+  min-height: 100%;
+  background: linear-gradient(180deg, var(--orange-50) 0, var(--white) 320px);
+}
+
+.deposit__inner {
+  padding-block: clamp(1.75rem, 5vw, 3rem) clamp(2.5rem, 6vw, 4rem);
+  max-width: 1040px;
+}
+
+.deposit__head {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+/* ---------- Étapes ---------- */
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.stepper__item {
+  position: relative;
+
+  /* ligne de progression entre les pastilles */
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 17px;
+    left: calc(50% + 22px);
+    right: calc(-50% + 22px);
+    height: 2px;
+    border-radius: 2px;
+    background: var(--sand-200);
+  }
+  &--done:not(:last-child)::after {
+    background: var(--orange-500);
+  }
+}
+
+.stepper__button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-600);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+button.stepper__button {
+  cursor: pointer;
+  &:hover .stepper__label {
+    text-decoration: underline;
+  }
+}
+
+.stepper__dot {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--sand-200);
+  border-radius: 50%;
+  background: var(--white);
+  font-weight: 700;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.stepper__item--current {
+  .stepper__button {
+    color: var(--ink-900);
+    font-weight: 700;
+  }
+  .stepper__dot {
+    border-color: var(--orange-600);
+    background: var(--orange-600);
+    color: var(--white);
+    box-shadow: var(--ring);
+  }
+}
+
+.stepper__item--done {
+  .stepper__button {
+    color: var(--orange-700);
+  }
+  .stepper__dot {
+    border-color: var(--orange-500);
+    background: var(--orange-100);
+    color: var(--orange-700);
+  }
+}
+
+/* ---------- Mise en page ---------- */
+.deposit__layout {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 920px) {
+  .deposit__layout {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+  .tips {
+    position: sticky;
+    top: calc(var(--header-h) + 1.5rem);
+  }
+}
+
+.deposit__form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.step-title {
+  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+}
+
+.breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-self: start;
+  margin-top: -0.75rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-pill);
+  background: var(--orange-50);
+  color: var(--orange-800);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.price-input {
+  position: relative;
+  max-width: 260px;
+
+  input {
+    padding-right: 2.75rem;
+    font-size: 1.25rem;
+    font-weight: 650;
+  }
+}
+.price-input__suffix {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-600);
+  font-weight: 600;
+}
+
+.locate {
+  justify-self: start;
+}
+
+.privacy {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink-600);
+  font-size: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--sand-100);
+}
+.actions__next {
+  margin-left: auto;
+  min-width: 180px;
+}
+
+.autosave {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: -0.75rem;
+  color: var(--success);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* ---------- Conseils ---------- */
+.tips {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--orange-100);
+  border-radius: var(--radius-lg);
+  background: var(--orange-50);
+
+  h2 {
+    font-size: 1rem;
+  }
+  p {
+    color: var(--ink-600);
+    font-size: 0.9375rem;
+  }
+}
+.tips__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--orange-600);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Succès ---------- */
+.success {
+  display: grid;
+  justify-items: center;
+  gap: 0.875rem;
+  max-width: 620px;
+  margin-inline: auto;
+  text-align: center;
+}
+.success__icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--success-bg);
+  color: var(--success);
+}
+.success__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.photos-step {
+  display: grid;
+  gap: 0.75rem;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+/* Mobile : seul le libellé de l'étape en cours est affiché (5 étapes sur 390 px). */
+@media (max-width: 559px) {
+  .stepper__item:not(.stepper__item--current) .stepper__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,93 @@
+<div class="manager" (dragover)="$event.preventDefault()" (drop)="onDrop($event)">
+  @if (remaining() > 0) {
+    <label class="dropzone">
+      <input
+        class="sr-only"
+        type="file"
+        multiple
+        [accept]="accept"
+        (change)="onFiles($any($event.target))"
+        aria-describedby="photo-hint"
+      />
+      <span class="dropzone__icon"><app-icon name="plus" [size]="26" [stroke]="2" /></span>
+      <span class="dropzone__title">Ajouter des photos</span>
+      <span id="photo-hint" class="dropzone__hint">Glissez-déposez ou cliquez · JPEG, PNG, WebP ou HEIC · 15 Mo max.</span>
+    </label>
+  }
+
+  <div class="manager__meta">
+    <p class="muted small" aria-live="polite">{{ used() }}/{{ max() }} photos · la première est la photo principale</p>
+    @if (notice(); as msg) {
+      <p class="field__error" role="alert">{{ msg }}</p>
+    }
+  </div>
+
+  @if (items().length > 0) {
+    <ol class="grid" aria-label="Vos photos">
+      @for (item of items(); track item.key; let i = $index, first = $first, last = $last) {
+        <li
+          class="tile"
+          [class.tile--main]="first"
+          [class.tile--failed]="item.state === 'failed'"
+          draggable="true"
+          (dragstart)="onDragStart($event, item.key)"
+          (dragover)="$event.preventDefault()"
+          (drop)="onDropOn($event, item.key)"
+          (dragend)="onDragEnd()"
+        >
+          <div class="tile__media">
+            @if (imageFor(item); as url) {
+              <img [src]="url" [alt]="'Photo ' + (i + 1)" loading="lazy" />
+            }
+            @if (first && item.state !== 'failed') {
+              <span class="badge">Principale</span>
+            }
+            @switch (item.state) {
+              @case ('preparing') {
+                <span class="overlay" role="status"><span class="spinner" aria-hidden="true"></span>Préparation…</span>
+              }
+              @case ('uploading') {
+                <span class="overlay" role="status"><span class="spinner" aria-hidden="true"></span>Envoi et optimisation…</span>
+              }
+              @case ('failed') {
+                <span class="overlay overlay--error" role="alert">{{ item.error ?? 'Échec de l’envoi.' }}</span>
+              }
+            }
+          </div>
+
+          <div class="tile__actions">
+            <button type="button" class="icon-btn" (click)="move(item.key, -1)" [disabled]="first" [attr.aria-label]="'Déplacer la photo ' + (i + 1) + ' vers la gauche'">
+              <app-icon name="arrowLeft" [size]="18" />
+            </button>
+            <button type="button" class="icon-btn icon-btn--flip" (click)="move(item.key, 1)" [disabled]="last" [attr.aria-label]="'Déplacer la photo ' + (i + 1) + ' vers la droite'">
+              <app-icon name="arrowLeft" [size]="18" />
+            </button>
+            @if (!first && item.state === 'ready') {
+              <button type="button" class="icon-btn" (click)="makeMain(item.key)" [attr.aria-label]="'Définir la photo ' + (i + 1) + ' comme principale'" title="Photo principale">
+                <app-icon name="sparkles" [size]="18" />
+              </button>
+            }
+            @if (item.source && item.state === 'ready') {
+              <button type="button" class="icon-btn" (click)="openCrop(item)" [attr.aria-label]="'Recadrer la photo ' + (i + 1)" title="Recadrer">
+                <app-icon name="crop" [size]="18" />
+              </button>
+            }
+            <button type="button" class="icon-btn icon-btn--danger" (click)="remove(item)" [attr.aria-label]="'Supprimer la photo ' + (i + 1)" title="Supprimer">
+              <app-icon name="trash" [size]="18" />
+            </button>
+          </div>
+        </li>
+      }
+    </ol>
+  }
+</div>
+
+@if (cropping(); as crop) {
+  <app-crop-editor
+    [src]="crop.src"
+    [naturalWidth]="crop.width"
+    [naturalHeight]="crop.height"
+    (applied)="applyCrop($event)"
+    (cancelled)="cropping.set(null)"
+  />
+}

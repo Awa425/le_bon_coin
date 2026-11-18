@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header {
+  background: rgb(255 255 255 / 0.92);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--sand-200);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2.5vw, 2rem);
+  min-height: var(--header-h);
+}
+
+.header__search {
+  flex: 1;
+  display: none;
+  align-items: center;
+  gap: 0.625rem;
+  max-width: 520px;
+  height: 48px;
+  padding: 0 1.125rem;
+  border-radius: var(--radius-pill);
+  background: var(--sand-100);
+  color: var(--ink-600);
+  border: 1.5px solid transparent;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:focus-within {
+    background: var(--white);
+    border-color: var(--orange-500);
+    box-shadow: var(--ring);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-size: 0.9375rem;
+    color: var(--ink-900);
+
+    &::placeholder {
+      color: var(--ink-600);
+    }
+    &::-webkit-search-cancel-button {
+      cursor: pointer;
+    }
+  }
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.25rem, 1.5vw, 1.25rem);
+  margin-left: auto;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.25rem 0.375rem;
+  border-radius: var(--radius-sm);
+  color: var(--ink-900);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  span {
+    display: none;
+    max-width: 9ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover,
+  &--active {
+    color: var(--orange-700);
+  }
+}
+
+.header__cta {
+  min-height: 46px;
+  padding-inline: 0.875rem;
+}
+.header__cta-label {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .nav-item span {
+    display: inline;
+  }
+  .header__cta {
+    padding-inline: 1.375rem;
+  }
+  .header__cta-label {
+    display: inline;
+  }
+  .header__cta-short {
+    display: none;
+  }
+}
+
+@media (min-width: 960px) {
+  .header__search {
+    display: flex;
+  }
+}

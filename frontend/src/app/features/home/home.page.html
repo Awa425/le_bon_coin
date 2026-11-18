@@ -1,0 +1,123 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero__inner">
+    <p class="eyebrow">Petites annonces près de chez vous</p>
+    <h1 id="hero-title" class="hero__title">
+      Achetez et vendez <span class="accent">autour de vous</span>, en toute confiance.
+    </h1>
+    <p class="hero__lead">
+      Des annonces de particuliers et de pros, partout en France. Paiement sécurisé, livraison en point relais ou
+      remise en main propre.
+    </p>
+
+    <form class="searchbar" role="search" aria-label="Rechercher une annonce" (submit)="$event.preventDefault(); search()">
+      <div class="searchbar__field searchbar__field--what">
+        <app-icon name="search" [size]="22" />
+        <div class="searchbar__control">
+          <label for="hero-q">Quoi ?</label>
+          <input id="hero-q" name="q" type="search" [(ngModel)]="query" placeholder="Ex. vélo, canapé, T2…" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="searchbar__field searchbar__field--where">
+        <app-icon name="pin" [size]="22" />
+        <div class="searchbar__control">
+          <label for="hero-where">Où ?</label>
+          <input id="hero-where" name="ou" [(ngModel)]="where" placeholder="Ville ou code postal" autocomplete="address-level2" />
+        </div>
+      </div>
+
+      <div class="searchbar__field searchbar__field--radius">
+        <div class="searchbar__control">
+          <label for="hero-radius">Rayon</label>
+          <select id="hero-radius" name="rayon" [(ngModel)]="radius">
+            @for (r of radiusOptions; track r) {
+              <option [ngValue]="r">{{ r }} km</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="button button--primary searchbar__submit">
+        <app-icon name="search" [size]="20" [stroke]="2.25" />
+        Rechercher
+      </button>
+    </form>
+
+    <div class="popular">
+      <span class="popular__label">Populaire :</span>
+      <ul class="popular__list">
+        @for (term of popular; track term) {
+          <li><button type="button" class="chip" (click)="pick(term)">{{ term }}</button></li>
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="categories-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="categories-title">Catégories</h2>
+    </div>
+
+    @if (categories(); as list) {
+      @if (list.length > 0) {
+        <ul class="categories">
+          @for (category of list; track category.id; let i = $index) {
+            <li>
+              <a
+                class="category"
+                [routerLink]="['/recherche']"
+                [queryParams]="{ categorie: category.slug }"
+                [attr.title]="subcategories(category) || null"
+              >
+                <span class="category__icon" [class.category__icon--sand]="i % 2 === 1">
+                  <app-icon [name]="icon(category)" [size]="26" [stroke]="1.6" />
+                </span>
+                <span class="category__name">{{ category.name }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="muted">Les catégories sont momentanément indisponibles.</p>
+      }
+    } @else {
+      <ul class="categories" aria-hidden="true">
+        @for (placeholder of [1, 2, 3, 4, 5, 6]; track placeholder) {
+          <li class="category category--skeleton"></li>
+        }
+      </ul>
+    }
+  </div>
+</section>
+
+<section class="section section--tinted" aria-labelledby="promise-title">
+  <div class="container">
+    <h2 id="promise-title" class="sr-only">Pourquoi la Plateforme</h2>
+    <ul class="promises">
+      @for (promise of promises; track promise.title) {
+        <li class="promise">
+          <span class="promise__icon"><app-icon [name]="promise.icon" [size]="24" /></span>
+          <h3>{{ promise.title }}</h3>
+          <p class="muted">{{ promise.text }}</p>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2>Vous avez quelque chose à vendre ?</h2>
+        <p>Publiez votre annonce gratuitement : elle est en ligne dès sa validation.</p>
+      </div>
+      <a class="button button--lg cta-band__button" routerLink="/deposer">
+        <app-icon name="plus" [size]="20" [stroke]="2.25" />
+        Déposer une annonce
+      </a>
+    </div>
+  </div>
+</section>

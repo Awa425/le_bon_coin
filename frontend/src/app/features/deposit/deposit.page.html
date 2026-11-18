@@ -1,0 +1,239 @@
+<div class="deposit">
+  <div class="container deposit__inner">
+    <header class="deposit__head">
+      <p class="eyebrow">Nouvelle annonce</p>
+      <h1 id="deposit-title">Déposer une annonce</h1>
+    </header>
+
+    @if (submitted(); as listing) {
+      <section class="card success" role="status" aria-labelledby="success-title">
+        <span class="success__icon"><app-icon name="check" [size]="32" [stroke]="2.5" /></span>
+        <h2 id="success-title">Annonce envoyée en modération</h2>
+        <p class="muted">« {{ listing.title }} » sera visible dès sa validation, généralement en moins de 15 minutes.</p>
+        <div class="success__actions">
+          <a class="button button--primary" routerLink="/">Retour à l'accueil</a>
+          <a class="button button--secondary" routerLink="/compte">Mon compte</a>
+        </div>
+      </section>
+    } @else {
+      <ol class="stepper" aria-label="Étapes du dépôt">
+        @for (item of steps; track item.step) {
+          <li
+            class="stepper__item"
+            [class.stepper__item--current]="item.step === step()"
+            [class.stepper__item--done]="item.step < step()"
+            [attr.aria-current]="item.step === step() ? 'step' : null"
+          >
+            @if (item.step < step()) {
+              <button type="button" class="stepper__button" (click)="goTo(item.step)">
+                <span class="stepper__dot"><app-icon name="check" [size]="16" [stroke]="3" /></span>
+                <span class="stepper__label">{{ item.label }}</span>
+                <span class="sr-only"> (terminée, modifier)</span>
+              </button>
+            } @else {
+              <span class="stepper__button">
+                <span class="stepper__dot">{{ item.step }}</span>
+                <span class="stepper__label">{{ item.label }}</span>
+              </span>
+            }
+          </li>
+        }
+      </ol>
+
+      <div class="deposit__layout">
+        <form class="card deposit__form" (submit)="$event.preventDefault(); next()" novalidate aria-labelledby="deposit-title">
+          @if (error(); as err) {
+            <div class="alert" role="alert">{{ err.message }}</div>
+          }
+
+          @switch (step()) {
+            @case (1) {
+              <h2 class="step-title">Commençons par l'essentiel</h2>
+              <fieldset [formGroup]="basics" class="fields">
+                <legend class="sr-only">Votre annonce</legend>
+
+                <fieldset class="field">
+                  <legend>Type d'annonce</legend>
+                  <div class="choices">
+                    @for (t of types; track t.value) {
+                      <label class="choice">
+                        <input type="radio" formControlName="type" [value]="t.value" />
+                        <span>{{ t.label }}</span>
+                      </label>
+                    }
+                  </div>
+                </fieldset>
+
+                <div class="field" [class.field--invalid]="showError(basics.controls.title) || fieldError('title')">
+                  <label for="title">Titre de l'annonce <span class="required" aria-hidden="true">*</span></label>
+                  <input
+                    id="title"
+                    formControlName="title"
+                    maxlength="100"
+                    autocomplete="off"
+                    placeholder="Ex. Vélo de ville Peugeot, taille M"
+                  />
+                  <p class="field__hint">{{ basics.controls.title.value.length }}/100 caractères</p>
+                  @if (showError(basics.controls.title)) {
+                    <p class="field__error" role="alert">Le titre doit faire entre 3 et 100 caractères.</p>
+                  } @else if (fieldError('title'); as msg) {
+                    <p class="field__error" role="alert">{{ msg }}</p>
+                  }
+                </div>
+
+                @if (treeError()) {
+                  <p class="field__error" role="alert">Impossible de charger les catégories. Réessayez plus tard.</p>
+                } @else {
+                  <app-category-picker
+                    [tree]="tree()"
+                    [(value)]="categoryId"
+                    [invalid]="categoryTouched() && !categoryId()"
+                  />
+                  @if (categoryTouched() && !categoryId()) {
+                    <p class="field__error" role="alert">Choisissez une catégorie jusqu'au dernier niveau.</p>
+                  } @else if (fieldError('category_id'); as msg) {
+                    <p class="field__error" role="alert">{{ msg }}</p>
+                  }
+                }
+              </fieldset>
+            }
+
+            @case (2) {
+              <h2 class="step-title">Ajoutez de belles photos</h2>
+            }
+
+            @case (3) {
+              <h2 class="step-title">Décrivez votre article</h2>
+              <p class="breadcrumb"><app-icon name="tag" [size]="16" /> {{ categoryPath() }}</p>
+              <div class="fields">
+                <app-attribute-fields
+                  [schema]="category()?.attributes ?? []"
+                  [group]="attributes()"
+                  [serverErrors]="serverErrors()"
+                />
+                <div
+                  [formGroup]="details"
+                  class="field"
+                  [class.field--invalid]="showError(details.controls.description) || fieldError('description')"
+                >
+                  <label for="description">Description <span class="required" aria-hidden="true">*</span></label>
+                  <textarea
+                    id="description"
+                    formControlName="description"
+                    rows="6"
+                    maxlength="4000"
+                    placeholder="État, dimensions, raison de la vente, disponibilités…"
+                  ></textarea>
+                  @if (showError(details.controls.description)) {
+                    <p class="field__error" role="alert">La description doit faire au moins 10 caractères.</p>
+                  } @else if (fieldError('description'); as msg) {
+                    <p class="field__error" role="alert">{{ msg }}</p>
+                  }
+                </div>
+              </div>
+            }
+
+            @case (4) {
+              <h2 class="step-title">Fixez votre prix</h2>
+              <fieldset [formGroup]="pricing" class="fields">
+                <legend class="sr-only">Prix et contact</legend>
+                <div class="field" [class.field--invalid]="showError(pricing.controls.price) || fieldError('price')">
+                  <label for="price">
+                    Prix @if (priceRequired()) {<span class="required" aria-hidden="true">*</span>}
+                  </label>
+                  <div class="price-input">
+                    <input id="price" type="number" inputmode="decimal" min="0" step="0.01" formControlName="price" placeholder="0" />
+                    <span class="price-input__suffix" aria-hidden="true">€</span>
+                  </div>
+                  @if (showError(pricing.controls.price)) {
+                    <p class="field__error" role="alert">
+                      {{ pricing.controls.price.hasError('required') ? 'Le prix est obligatoire.' : 'Le prix doit être positif.' }}
+                    </p>
+                  } @else if (fieldError('price'); as msg) {
+                    <p class="field__error" role="alert">{{ msg }}</p>
+                  }
+                </div>
+                <label class="switch">
+                  <input type="checkbox" formControlName="hide_phone" />
+                  <span>
+                    <strong>Masquer mon numéro de téléphone</strong><br />
+                    <span class="muted small">Les acheteurs vous contactent uniquement via la messagerie.</span>
+                  </span>
+                </label>
+              </fieldset>
+            }
+
+            @case (5) {
+              <h2 class="step-title">Où se trouve l'article ?</h2>
+              <fieldset [formGroup]="location" class="fields">
+                <legend class="sr-only">Localisation</legend>
+                <button type="button" class="button button--secondary locate" (click)="useMyPosition()" [disabled]="locating()">
+                  <app-icon name="locate" [size]="20" />
+                  {{ locating() ? 'Localisation…' : 'Utiliser ma position' }}
+                </button>
+                @if (locationMessage(); as msg) {
+                  <p class="muted small" role="status">{{ msg }}</p>
+                }
+                <div class="field-row">
+                  <div class="field" [class.field--invalid]="showError(location.controls.lat)">
+                    <label for="lat">Latitude <span class="required" aria-hidden="true">*</span></label>
+                    <input id="lat" type="number" step="any" formControlName="lat" placeholder="48.8566" />
+                  </div>
+                  <div class="field" [class.field--invalid]="showError(location.controls.lng)">
+                    <label for="lng">Longitude <span class="required" aria-hidden="true">*</span></label>
+                    <input id="lng" type="number" step="any" formControlName="lng" placeholder="2.3522" />
+                  </div>
+                </div>
+                @if (showError(location.controls.lat) || showError(location.controls.lng)) {
+                  <p class="field__error" role="alert">Indiquez une position valide.</p>
+                } @else if (fieldError('location'); as msg) {
+                  <p class="field__error" role="alert">{{ msg }}</p>
+                }
+                <p class="privacy"><app-icon name="shield" [size]="18" /> Seule une zone approximative sera affichée, jamais votre adresse exacte.</p>
+              </fieldset>
+            }
+          }
+          @if (draft(); as listing) {
+            <div class="photos-step" [hidden]="step() !== 2">
+              <app-photo-manager
+                [listingId]="listing.id"
+                [initialPhotos]="listing.photos ?? []"
+                (summaryChange)="photoSummary.set($event); photoError.set(null)"
+              />
+              @if (photoError(); as msg) {
+                <p class="field__error" role="alert">{{ msg }}</p>
+              } @else if (fieldError('photos'); as msg) {
+                <p class="field__error" role="alert">{{ msg }}</p>
+              }
+            </div>
+          }
+
+          <div class="actions">
+            @if (step() > 1) {
+              <button type="button" class="button button--ghost" (click)="goTo($any(step() - 1))">
+                <app-icon name="arrowLeft" [size]="20" /> Retour
+              </button>
+            }
+            <button type="submit" class="button button--primary actions__next" [disabled]="saving()">
+              @if (saving()) {
+                Enregistrement…
+              } @else {
+                {{ step() === lastStep ? 'Publier mon annonce' : 'Continuer' }}
+                <app-icon [name]="step() === lastStep ? 'check' : 'chevronRight'" [size]="20" [stroke]="2.25" />
+              }
+            </button>
+          </div>
+          @if (draft()) {
+            <p class="autosave" role="status"><app-icon name="check" [size]="16" [stroke]="2.5" /> Brouillon enregistré automatiquement</p>
+          }
+        </form>
+
+        <aside class="tips" aria-label="Conseils">
+          <span class="tips__icon"><app-icon name="sparkles" [size]="20" /></span>
+          <h2>Conseil</h2>
+          <p>{{ tip() }}</p>
+        </aside>
+      </div>
+    }
+  </div>
+</div>

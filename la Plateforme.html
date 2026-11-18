@@ -1,0 +1,937 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>la Plateforme</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout : en-tête collant + contenu centré (max 1180px) ; sur mobile, barre d'onglets fixe en bas. Charte orange et blanc ; jaune réservé à « À la une ». */
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F8F3EF; --line:#EEE5DF;
+  --fg:#1F1915; --muted:#6F6259;
+  --accent:#E0520F; --accent-hover:#C2440A; --accent-ink:#FFFFFF; --accent-soft:#FFEDE1;
+  --sun:#F5B301; --sun-soft:#FFF4D6; --sun-ink:#5A4300;
+  --good:#23855A;
+  --danger:#B93E2A; --danger-soft:#FBE4DF; --info:#2A67A6; --info-soft:#E1ECF8;
+  --t1:#FFF0E5; --t2:#F7F1EC; --t3:#FDE9DE; --t4:#F4EEE8; --tile-ink:#7C4A2A;
+  --map-land:#F7F2ED; --map-road:#FFFFFF; --map-water:#DCEAF2; --map-park:#E6EFDF;
+  --shadow:0 1px 2px rgba(31,25,21,.06),0 8px 24px rgba(31,25,21,.07);
+  --f-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif;
+  --r-s:8px; --r-m:14px; --r-l:22px;
+  --hdr:#FFFFFF;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141110; --surface:#1C1816; --surface-2:#26201D; --line:#3A302A;
+  --fg:#F6F0EB; --muted:#AB9D93;
+  --accent:#FF8A3D; --accent-hover:#FFA368; --accent-ink:#2A1206; --accent-soft:#3D2414;
+  --sun:#F5C542; --sun-soft:#3A2F12; --sun-ink:#F9DD93;
+  --good:#5CC98A;
+  --danger:#F07C66; --danger-soft:#3D1E18; --info:#7FAEE3; --info-soft:#182A3D;
+  --t1:#33231A; --t2:#2B2420; --t3:#382319; --t4:#2A2522; --tile-ink:#F0BE9C;
+  --map-land:#1F1A17; --map-road:#2F2724; --map-water:#173040; --map-park:#1E2A1C;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  --hdr:#1C1816; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#141110; --surface:#1C1816; --surface-2:#26201D; --line:#3A302A;
+  --fg:#F6F0EB; --muted:#AB9D93;
+  --accent:#FF8A3D; --accent-hover:#FFA368; --accent-ink:#2A1206; --accent-soft:#3D2414;
+  --sun:#F5C542; --sun-soft:#3A2F12; --sun-ink:#F9DD93;
+  --good:#5CC98A;
+  --danger:#F07C66; --danger-soft:#3D1E18; --info:#7FAEE3; --info-soft:#182A3D;
+  --t1:#33231A; --t2:#2B2420; --t3:#382319; --t4:#2A2522; --tile-ink:#F0BE9C;
+  --map-land:#1F1A17; --map-road:#2F2724; --map-water:#173040; --map-park:#1E2A1C;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  --hdr:#1C1816; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--hdr)}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:6px}
+.ico{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Header */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--hdr);border-bottom:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--f-display);font-weight:800;font-size:20px;letter-spacing:-.02em;white-space:nowrap}
+.logo .mk{width:30px;height:30px;flex:none}
+.logo em{font-style:normal;color:var(--accent)}
+.hsearch{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid transparent;border-radius:999px;padding:8px 14px;max-width:520px}
+.hsearch:focus-within{border-color:var(--accent);background:var(--surface)}
+.hsearch input{border:0;background:transparent;outline:0;flex:1;min-width:0}
+.hnav{display:flex;align-items:center;gap:4px;margin-left:auto}
+.hnav a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:500;color:var(--muted);padding:6px 10px;border-radius:10px;position:relative}
+.hnav a:hover,.hnav a.on{color:var(--fg);background:var(--surface-2)}
+.badge{position:absolute;top:2px;right:8px;min-width:17px;height:17px;border-radius:9px;background:var(--danger);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-weight:600;padding:11px 20px;border:1px solid transparent;transition:background .15s,border-color .15s,transform .1s;white-space:nowrap}
+.btn:active{transform:scale(.98)}
+.btn-p{background:var(--accent);color:var(--accent-ink)}
+.btn-p:hover{background:var(--accent-hover)}
+.btn-s{background:var(--surface);border-color:var(--line)}
+.btn-s:hover{border-color:var(--fg)}
+.btn-g{background:transparent;color:var(--accent);padding-inline:10px}
+.btn-sm{padding:7px 14px;font-size:14px}
+.btn-block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* Mobile tabbar */
+.tabbar{display:none}
+@media (max-width:760px){
+  .hnav,.hdr .btn-dep{display:none}
+  .hsearch{display:none}
+  .hdr.has-search .hsearch{display:flex}
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--hdr);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+  .tabbar a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:500;color:var(--muted);padding:4px 0;position:relative}
+  .tabbar a.on{color:var(--accent)}
+  .tabbar .dep{color:var(--accent-ink)}
+  .tabbar .dep span.plus{width:40px;height:40px;border-radius:14px;background:var(--accent);display:grid;place-items:center;margin-top:-14px;box-shadow:var(--shadow)}
+  .tabbar .badge{right:calc(50% - 22px)}
+  main{padding-bottom:84px}
+}
+main{min-height:70vh}
+.screen{padding-block:28px 48px}
+
+/* Generic */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--accent-soft);color:var(--accent)}
+.pill.sun{background:var(--sun-soft);color:var(--sun-ink)}
+.pill.warn{background:var(--sun-soft);color:var(--sun-ink)}
+.pill.bad{background:var(--danger-soft);color:var(--danger)}
+.pill.info{background:var(--info-soft);color:var(--info)}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sec-h h2{font-size:22px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:600}
+.inp{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-s);padding:11px 12px;outline:0}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea.inp{resize:vertical;min-height:110px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;background:var(--fg);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:600;font-size:14px;z-index:90;transition:.25s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:760px){.toast{bottom:calc(90px + env(safe-area-inset-bottom,0px))}}
+
+/* Listing card */
+.grid-l{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.lc{display:flex;flex-direction:column;gap:8px;cursor:pointer;min-width:0}
+.lc .ph{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:var(--r-m);overflow:hidden;display:grid;place-items:center;color:var(--tile-ink)}
+.lc .ph svg.ill{width:44%;height:44%;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
+.lc:hover .ph svg.ill{transform:scale(1.06)}
+.fav{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:0;background:var(--surface);color:var(--fg);display:grid;place-items:center;box-shadow:var(--shadow)}
+.fav.on{color:var(--danger)}
+.fav.on .ico{fill:currentColor}
+.ph .tags{position:absolute;left:8px;bottom:8px;display:flex;gap:6px;flex-wrap:wrap}
+.ph .tags .pill{background:var(--surface);color:var(--fg)}
+.ph .tags .pill.sun{background:var(--sun);color:#2B2000}
+.lc h3{font-family:var(--f-body);font-size:15px;font-weight:600;line-height:1.3;letter-spacing:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lc .pr{font-family:var(--f-display);font-weight:700;font-size:18px}
+.lc .meta{font-size:13px;color:var(--muted);display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+
+/* Home */
+.hero{background:linear-gradient(180deg,var(--accent-soft),var(--bg));border-bottom:1px solid var(--line)}
+.hero .wrap{padding-block:44px 36px;display:grid;gap:22px}
+.hero h1{font-size:clamp(30px,5vw,50px);font-weight:800;max-width:16ch}
+.hero h1 span{color:var(--accent)}
+.hero p.lead{color:var(--muted);font-size:17px;max-width:52ch}
+.bigsearch{display:grid;grid-template-columns:1.4fr 1fr auto auto;gap:0;background:var(--surface);border:1.5px solid var(--fg);border-radius:18px;padding:6px;max-width:920px;box-shadow:var(--shadow)}
+.bigsearch .seg{display:flex;align-items:center;gap:10px;padding:8px 14px;min-width:0}
+.bigsearch .seg+.seg{border-left:1px solid var(--line)}
+.bigsearch .seg div{display:flex;flex-direction:column;min-width:0;flex:1}
+.bigsearch .seg small{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.bigsearch input,.bigsearch select{border:0;background:transparent;outline:0;padding:0;font-size:15px;min-width:0;width:100%}
+.bigsearch .btn{border-radius:13px;padding-inline:24px}
+@media (max-width:760px){
+  .bigsearch{grid-template-columns:1fr 1fr;border-radius:16px}
+  .bigsearch .seg:first-child{grid-column:1/-1}
+  .bigsearch .seg+.seg{border-left:0;border-top:1px solid var(--line)}
+  .bigsearch .seg:nth-child(3){border-left:1px solid var(--line)}
+  .bigsearch .btn{grid-column:1/-1;margin-top:6px;padding-block:13px}
+}
+.quick{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:14px;font-weight:500}
+.chip:hover{border-color:var(--fg)}
+.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.cats{display:grid;grid-template-columns:repeat(8,1fr);gap:12px}
+.cat{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;font-size:13px;font-weight:600;padding:14px 6px;border-radius:var(--r-m);background:var(--surface);border:1px solid var(--line);cursor:pointer}
+.cat:hover{border-color:var(--accent);color:var(--accent)}
+.cat .ci{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:var(--tile-ink)}
+.cat .ci svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:900px){.cats{grid-template-columns:repeat(4,1fr)}}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.trust .card{padding:20px;display:flex;gap:14px;align-items:flex-start}
+.trust .ti{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.trust h3{font-size:16px;margin-bottom:4px}
+@media (max-width:760px){.trust{grid-template-columns:1fr}}
+.stack{display:grid;gap:40px}
+.pro-band{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:26px;border-radius:var(--r-l);background:var(--fg);color:var(--bg)}
+.pro-band h3{font-size:22px}
+.pro-band p{opacity:.75;margin-top:4px}
+.pro-band .btn{background:var(--bg);color:var(--fg)}
+
+/* Results */
+.res{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:start}
+.filters{position:sticky;top:calc(80px + env(safe-area-inset-top,0px));display:grid;gap:22px;padding:20px}
+.filters h4{font-family:var(--f-body);font-size:14px;font-weight:700;margin-bottom:10px}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;padding:4px 0;cursor:pointer}
+.chk input{accent-color:var(--accent);width:17px;height:17px}
+.range{width:100%;accent-color:var(--accent)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.res-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.res-top h1{font-size:24px}
+.seg-t{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:3px}
+.seg-t button{border:0;background:transparent;padding:6px 14px;border-radius:999px;font-size:14px;font-weight:600;color:var(--muted);display:flex;gap:6px;align-items:center}
+.seg-t button.on{background:var(--surface);color:var(--fg);box-shadow:var(--shadow)}
+.mfilters{display:none}
+@media (max-width:900px){
+  .res{grid-template-columns:1fr}
+  .filters{display:none}
+  .mfilters{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+  .mfilters .chip{flex:none}
+}
+.mapbox{position:relative;border-radius:var(--r-l);overflow:hidden;border:1px solid var(--line);aspect-ratio:16/10;max-width:100%;background:var(--map-land)}
+.mapbox svg{width:100%;height:100%;display:block}
+.mpin{cursor:pointer}
+.mpin rect{fill:var(--surface);stroke:var(--fg);stroke-width:1.2}
+.mpin text{fill:var(--fg);font:700 12px var(--f-body)}
+.mpin.on rect{fill:var(--fg)}
+.mpin.on text{fill:var(--bg)}
+.map-card{position:absolute;left:12px;bottom:12px;right:12px;max-width:340px;display:flex;gap:12px;padding:10px;align-items:center;box-shadow:var(--shadow);cursor:pointer}
+.map-card .ph{width:72px;height:56px;border-radius:10px;display:grid;place-items:center;color:var(--tile-ink);flex:none}
+@media (max-width:760px){.mapbox{aspect-ratio:4/5}.map-card{max-width:none}}
+.map-card .ph svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:1.5}
+
+/* Listing detail */
+.crumbs{font-size:13px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.crumbs a:hover{color:var(--accent)}
+.detail{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:32px;align-items:start}
+.gallery .main{aspect-ratio:4/3;max-width:100%;border-radius:var(--r-l);display:grid;place-items:center;color:var(--tile-ink);position:relative}
+.gallery .main svg.ill{width:38%;height:38%;stroke:currentColor;fill:none;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.gallery .count{position:absolute;right:12px;bottom:12px;background:var(--surface);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center}
+.thumbs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+.thumbs button{aspect-ratio:1;border-radius:10px;border:2px solid transparent;display:grid;place-items:center;color:var(--tile-ink);padding:0}
+.thumbs button.on{border-color:var(--fg)}
+.thumbs svg{width:40%;height:40%;stroke:currentColor;fill:none;stroke-width:1.5}
+.dinfo{display:grid;gap:22px;margin-top:26px}
+.dinfo h2{font-size:18px}
+.attrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden}
+.attrs div{background:var(--surface);padding:12px 14px}
+.attrs dt{font-size:12px;color:var(--muted)}
+.attrs dd{margin:0;font-weight:600}
+.buybox{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));padding:22px;display:grid;gap:16px}
+.buybox h1{font-size:24px;font-weight:700}
+.buybox .price{font-family:var(--f-display);font-size:34px;font-weight:800}
+.prot{display:flex;gap:12px;padding:14px;border-radius:var(--r-m);background:var(--accent-soft);color:var(--fg);font-size:14px}
+.prot .ico{color:var(--accent)}
+.seller{display:flex;align-items:center;gap:12px}
+.av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-family:var(--f-display);background:var(--t3);color:var(--fg);flex:none}
+.stars{display:inline-flex;gap:1px;color:var(--sun)}
+.stars .ico{width:14px;height:14px;fill:currentColor;stroke:none}
+.minimap{height:150px;border-radius:var(--r-m);overflow:hidden;border:1px solid var(--line)}
+.minimap svg{width:100%;height:100%;display:block}
+.mob-cta{display:none}
+@media (max-width:900px){
+  .detail{grid-template-columns:1fr}
+  .buybox{position:static}
+}
+@media (max-width:760px){
+  .mob-cta{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:calc(62px + env(safe-area-inset-bottom,0px));z-index:45;background:var(--hdr);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
+  .mob-cta .btn{flex:1}
+  .screen.has-cta{padding-bottom:90px}
+}
+
+/* Sheet / modal */
+.ov{position:fixed;inset:0;background:rgba(10,18,14,.45);z-index:80;display:grid;place-items:center;padding:16px}
+.sheet{background:var(--surface);border-radius:var(--r-l);padding:24px;width:100%;max-width:420px;display:grid;gap:16px;box-shadow:var(--shadow)}
+.sheet h3{font-size:20px}
+.offer-sugg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.offer-sugg button{border:1px solid var(--line);background:var(--surface);border-radius:var(--r-s);padding:10px 4px;font-weight:600}
+.offer-sugg button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.money-inp{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--r-s);padding:0 14px;background:var(--surface)}
+.money-inp input{border:0;outline:0;background:transparent;font-family:var(--f-display);font-size:28px;font-weight:700;padding:10px 0;width:100%}
+.money-inp:focus-within{border-color:var(--accent)}
+
+/* Deposit */
+.dep{max-width:760px;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:18px 0 26px}
+.steps div{display:grid;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.steps div::before{content:"";height:4px;border-radius:4px;background:var(--line)}
+.steps div.done::before,.steps div.on::before{background:var(--accent)}
+.steps div.on{color:var(--fg)}
+.dep .card{padding:26px;display:grid;gap:20px}
+.drop{border:2px dashed var(--line);border-radius:var(--r-m);padding:28px;display:grid;place-items:center;gap:8px;text-align:center;cursor:pointer;color:var(--muted)}
+.drop:hover{border-color:var(--accent);color:var(--accent)}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.photos .p{aspect-ratio:1;border-radius:12px;display:grid;place-items:center;color:var(--tile-ink);position:relative}
+.photos .p svg{width:42%;height:42%;stroke:currentColor;fill:none;stroke-width:1.5}
+.photos .p .cov{position:absolute;left:6px;top:6px;font-size:11px}
+.ai{display:flex;gap:12px;padding:14px 16px;border-radius:var(--r-m);background:var(--info-soft);font-size:14px;align-items:flex-start}
+.ai .ico{color:var(--info);margin-top:1px}
+.ai b{display:block;margin-bottom:2px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:14px;align-items:center;border:1.5px solid var(--line);border-radius:var(--r-m);padding:14px 16px;cursor:pointer;background:var(--surface)}
+.opt:hover{border-color:var(--muted)}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.opt .oi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--surface-2);flex:none}
+.opt.on .oi{background:var(--surface);color:var(--accent)}
+.opt .grow{flex:1;min-width:0}
+.opt b{display:block}
+.opt .rad{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.opt.on .rad{border-color:var(--accent)}
+.opt.on .rad::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.dep-nav{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
+.success{text-align:center;display:grid;gap:14px;justify-items:center;padding:20px 0}
+.success .big{width:76px;height:76px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.success .big .ico{width:38px;height:38px;stroke-width:2.2}
+.success h1{font-size:28px}
+
+/* Messages */
+.msg{display:grid;grid-template-columns:330px 1fr;height:calc(100vh - 150px);min-height:520px;overflow:hidden}
+.clist{border-right:1px solid var(--line);overflow-y:auto}
+.clist h2{font-size:20px;padding:18px 18px 10px}
+.ci-row{display:flex;gap:12px;padding:12px 18px;cursor:pointer;border-left:3px solid transparent}
+.ci-row:hover{background:var(--surface-2)}
+.ci-row.on{background:var(--surface-2);border-left-color:var(--accent)}
+.ci-row .th{width:48px;height:48px;border-radius:10px;display:grid;place-items:center;color:var(--tile-ink);flex:none}
+.ci-row .th svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.5}
+.ci-row .grow{min-width:0;flex:1}
+.ci-row .l1{display:flex;justify-content:space-between;gap:8px;font-weight:600;font-size:14px}
+.ci-row .l2,.ci-row .l3{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-row.unread .l3{color:var(--fg);font-weight:600}
+.thread{display:flex;flex-direction:column;min-width:0}
+.th-h{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line)}
+.th-h .grow{flex:1;min-width:0}
+.th-h .back{display:none;border:0;background:transparent;padding:4px}
+.th-listing{display:flex;align-items:center;gap:12px;padding:10px 18px;background:var(--surface-2);font-size:14px}
+.th-listing .grow{flex:1;min-width:0}
+.bubbles{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
+.bub{max-width:72%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.45}
+.bub.them{background:var(--surface-2);border-bottom-left-radius:6px;align-self:flex-start}
+.bub.me{background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:6px;align-self:flex-end}
+.bub time{display:block;font-size:11px;opacity:.65;margin-top:3px}
+.day{align-self:center;font-size:12px;color:var(--muted)}
+.offer-card{align-self:flex-start;max-width:320px;width:100%;border:1.5px solid var(--sun);border-radius:var(--r-m);padding:14px;display:grid;gap:10px;background:var(--surface)}
+.offer-card .amt{font-family:var(--f-display);font-size:26px;font-weight:800}
+.offer-card .acts{display:flex;gap:8px;flex-wrap:wrap}
+.compose{display:flex;gap:10px;padding:12px 18px;border-top:1px solid var(--line);align-items:center}
+.compose input{flex:1;min-width:0;border:1px solid var(--line);border-radius:999px;padding:10px 16px;background:var(--surface-2);outline:0}
+.compose input:focus{border-color:var(--accent)}
+.icon-btn{width:42px;height:42px;border-radius:50%;border:0;display:grid;place-items:center;flex:none;background:var(--surface-2);color:var(--fg)}
+.icon-btn.p{background:var(--accent);color:var(--accent-ink)}
+.safety{font-size:12px;color:var(--muted);text-align:center;padding:0 18px 8px}
+@media (max-width:760px){
+  .msg{grid-template-columns:1fr;height:calc(100vh - 140px);border-radius:0;border-left:0;border-right:0}
+  .msg.open .clist{display:none}
+  .msg:not(.open) .thread{display:none}
+  .th-h .back{display:block}
+  .bub{max-width:85%}
+  .screen.msgs{padding-block:0}
+  .screen.msgs .wrap{padding:0}
+}
+
+/* Checkout */
+.co{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:28px;align-items:start}
+.co .card{padding:22px;display:grid;gap:16px}
+.co h2{font-size:18px}
+.sum{position:sticky;top:calc(84px + env(safe-area-inset-top,0px))}
+.sum-item{display:flex;gap:12px;align-items:center}
+.sum-item .ph{width:64px;height:52px;border-radius:10px;display:grid;place-items:center;color:var(--tile-ink);flex:none}
+.sum-item .ph svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.5}
+.lines{display:grid;gap:8px;font-size:14px}
+.lines div{display:flex;justify-content:space-between;gap:10px}
+.lines .tot{border-top:1px solid var(--line);padding-top:12px;margin-top:4px;font-size:18px;font-weight:700}
+.relays{display:grid;gap:8px}
+.relay{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:10px 12px;border-radius:var(--r-s);border:1px solid var(--line);cursor:pointer}
+.relay.on{border-color:var(--accent);background:var(--accent-soft)}
+.cardrow{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+.timeline{display:grid;gap:0;text-align:left;width:100%;max-width:440px;margin-top:8px}
+.tl{display:grid;grid-template-columns:28px 1fr;gap:12px;position:relative;padding-bottom:18px}
+.tl::before{content:"";position:absolute;left:13px;top:26px;bottom:0;width:2px;background:var(--line)}
+.tl:last-child::before{display:none}
+.tl .b{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.tl.done .b{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tl.now .b{border-color:var(--accent)}
+.tl.now .b::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.tl .b .ico{width:14px;height:14px;stroke-width:3}
+.tl b{display:block;font-size:15px}
+@media (max-width:900px){.co{grid-template-columns:1fr}.sum{position:static}.cardrow{grid-template-columns:1fr 1fr}.cardrow .inp:first-child,.cardrow .field:first-child{grid-column:1/-1}}
+
+/* Account */
+.prof{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.prof .av{width:68px;height:68px;font-size:24px;background:var(--accent-soft);color:var(--accent)}
+.prof h1{font-size:26px}
+.prof .grow{flex:1;min-width:200px}
+.prof .facts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px;overflow-x:auto;scrollbar-width:none}
+.tabs button{border:0;background:transparent;padding:12px 14px;font-weight:600;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button.on{color:var(--fg);border-bottom-color:var(--accent)}
+.mylist{display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.my{display:flex;align-items:center;gap:14px;padding:12px 14px}
+.my .ph{width:72px;height:56px;border-radius:10px;display:grid;place-items:center;color:var(--tile-ink);flex:none}
+.my .ph svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.5}
+.my .grow{flex:1;min-width:0}
+.my .grow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.my .st{display:flex;gap:16px;font-size:13px;color:var(--muted)}
+.my .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:640px){.my{flex-wrap:wrap}.my .grow{flex:1 1 calc(100% - 90px)}.my .acts{width:100%;justify-content:flex-start}}
+.wal{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.wal .card{padding:22px;display:grid;gap:12px;align-content:start}
+.wal .bal{font-family:var(--f-display);font-size:40px;font-weight:800}
+.wal .tx{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.wal .tx:last-child{border-bottom:0}
+.pos{color:var(--good);font-weight:700}
+@media (max-width:760px){.wal{grid-template-columns:1fr}}
+
+/* Pro */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi{padding:18px;display:grid;gap:4px}
+.kpi .v{font-family:var(--f-display);font-size:28px;font-weight:800}
+.kpi .d{font-size:13px;font-weight:600}
+.up{color:var(--good)}
+.down{color:var(--danger)}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.pro-g{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+.pro-g .card{padding:20px;display:grid;gap:14px;align-content:start}
+.pro-g h3{font-size:17px}
+.chart svg{width:100%;height:auto;display:block}
+.chart .bar{fill:var(--accent)}
+.chart .bar.wk{fill:var(--accent-soft)}
+.chart text{fill:var(--muted);font:500 11px var(--f-body)}
+.chart .gl{stroke:var(--line);stroke-width:1}
+.quota{height:10px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.quota i{display:block;height:100%;background:var(--accent);border-radius:6px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px 6px;border-bottom:1px solid var(--line)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto}
+@media (max-width:900px){.pro-g{grid-template-columns:1fr}}
+
+/* Screen index */
+.idx-btn{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:70;background:var(--fg);color:var(--bg);border:0;border-radius:999px;padding:10px 16px;font-weight:600;font-size:13px;display:flex;gap:8px;align-items:center;box-shadow:var(--shadow)}
+.idx{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:70;width:260px;padding:10px;display:grid;gap:2px;box-shadow:var(--shadow)}
+.idx a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;font-size:14px}
+.idx a:hover,.idx a.on{background:var(--surface-2)}
+.idx a span{color:var(--muted);font-size:12px;margin-left:auto}
+@media (max-width:760px){.idx-btn{bottom:calc(140px + env(safe-area-inset-bottom,0px));padding:9px 12px}.idx{bottom:calc(186px + env(safe-area-inset-bottom,0px))}}
+footer{border-top:1px solid var(--line);margin-top:20px}
+footer .wrap{padding-block:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+@media (max-width:760px){footer{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M7 12V6.5a1.5 1.5 0 0 1 3 0V11M10 10V5a1.5 1.5 0 0 1 3 0v5M13 10V6a1.5 1.5 0 0 1 3 0v6M16 9.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5A6.5 6.5 0 0 1 5 15l-1.6-3a1.5 1.5 0 0 1 2.6-1.4L7 12"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5z"/><path d="m4 7.5 8 3.5 8-3.5M12 11v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="m9 4-5 2v14l5-2 6 2 5-2V4l-5 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3c.6 4.5 2.5 6.4 7 7-4.5.6-6.4 2.5-7 7-.6-4.5-2.5-6.4-7-7 4.5-.6 6.4-2.5 7-7zM19 16c.3 1.8 1 2.6 2.8 2.8-1.8.3-2.5 1-2.8 2.8-.3-1.8-1-2.5-2.8-2.8 1.8-.2 2.5-1 2.8-2.8z"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7h15v12H4zM4 7l11-3v3"/><path d="M15 13h4"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M4 9 5.5 4h13L20 9M4 9h16v2a3 3 0 0 1-5.3 1.9A3 3 0 0 1 12 14a3 3 0 0 1-2.7-1.1A3 3 0 0 1 4 11zM5 13v7h14v-7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-3-7z"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h11l-2 4 2 4H5"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 15c4-3 6-7 6-11-4 0-8 2-11 6l5 5zM7 10l-3 1 2 2M12 15l-1 3 2 2M6 18l-2 2"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m-5 5 5-5 5 5M4 16v4h16v-4"/></symbol>
+
+    <!-- Illustrations d'objets -->
+    <symbol id="x-bike" viewBox="0 0 48 48"><circle cx="12" cy="32" r="8"/><circle cx="36" cy="32" r="8"/><path d="M12 32 19 18h12l5 14M19 18l7 14h-14M24 14h-6M31 18l-2-5h4"/></symbol>
+    <symbol id="x-sofa" viewBox="0 0 48 48"><path d="M8 22v-6a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v6"/><path d="M5 22a3 3 0 0 1 6 0v5h26v-5a3 3 0 0 1 6 0v12H5zM9 34v4M39 34v4"/></symbol>
+    <symbol id="x-phone" viewBox="0 0 48 48"><rect x="14" y="5" width="20" height="38" rx="4"/><path d="M21 9h6M22 38h4"/></symbol>
+    <symbol id="x-car" viewBox="0 0 48 48"><path d="M5 30v-5l4-1 5-8h18l6 8 5 1v5z"/><circle cx="14" cy="31" r="4"/><circle cx="34" cy="31" r="4"/><path d="M15 23h18M24 16v7"/></symbol>
+    <symbol id="x-house" viewBox="0 0 48 48"><path d="M7 22 24 8l17 14M11 19v21h26V19"/><path d="M20 40V29h8v11M30 14V9h5v9"/></symbol>
+    <symbol id="x-shirt" viewBox="0 0 48 48"><path d="M17 7 7 13l4 8 4-2v21h18V19l4 2 4-8-10-6c-1 3-3.5 5-7 5s-6-2-7-5z"/></symbol>
+    <symbol id="x-guitar" viewBox="0 0 48 48"><path d="M28 20a8 8 0 0 0-11-1 7 7 0 0 0-8 8 9 9 0 0 0 12 12 7 7 0 0 0 8-8 8 8 0 0 0-1-11z"/><circle cx="20" cy="28" r="3"/><path d="m27 21 12-12M36 6l6 6"/></symbol>
+    <symbol id="x-stroller" viewBox="0 0 48 48"><path d="M10 12h4l4 16h18a12 12 0 0 0-12-12v12"/><circle cx="18" cy="37" r="3"/><circle cx="34" cy="37" r="3"/><path d="M18 28l-2 6M36 28l-2 6"/></symbol>
+    <symbol id="x-table" viewBox="0 0 48 48"><path d="M5 18h38v4H5zM9 22v18M39 22v18M14 22v10M34 22v10"/></symbol>
+    <symbol id="x-game" viewBox="0 0 48 48"><path d="M14 15h20a9 9 0 0 1 9 10l-1 7a5 5 0 0 1-9 2l-3-4H18l-3 4a5 5 0 0 1-9-2l-1-7a9 9 0 0 1 9-10z"/><path d="M15 21v6M12 24h6"/><circle cx="32" cy="22" r="1.5"/><circle cx="35" cy="26" r="1.5"/></symbol>
+    <symbol id="x-book" viewBox="0 0 48 48"><path d="M8 10h12a4 4 0 0 1 4 4v26a3 3 0 0 0-3-3H8zM40 10H28a4 4 0 0 0-4 4v26a3 3 0 0 1 3-3h13z"/></symbol>
+    <symbol id="x-scooter" viewBox="0 0 48 48"><circle cx="10" cy="36" r="5"/><circle cx="38" cy="36" r="5"/><path d="M10 36h22l4-26h-5M36 10h5M15 36l-2-6"/></symbol>
+    <symbol id="x-work" viewBox="0 0 48 48"><rect x="6" y="15" width="36" height="24" rx="3"/><path d="M18 15v-4h12v4M6 25h36M22 25v4h4v-4"/></symbol>
+    <symbol id="x-tree" viewBox="0 0 48 48"><path d="M24 6 12 22h6l-8 11h28l-8-11h6zM24 33v9"/></symbol>
+  </defs>
+</svg>
+
+<header class="hdr" id="hdr">
+  <div class="wrap">
+    <a href="#accueil" class="logo" aria-label="la Plateforme, accueil">
+      <svg class="mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/><path d="M8 24V14a6 6 0 0 1 6-6h10" stroke="var(--accent-ink)" stroke-width="3.2" fill="none" stroke-linecap="round"/><circle cx="21.5" cy="20.5" r="3.6" fill="var(--accent-ink)"/></svg>
+      <span>la <em>Plateforme</em></span>
+    </a>
+    <form class="hsearch" id="hsearch" role="search">
+      <svg class="ico"><use href="#i-search"/></svg>
+      <input id="hq" type="search" placeholder="Rechercher un vélo, un canapé, un appartement…" aria-label="Rechercher">
+    </form>
+    <nav class="hnav" aria-label="Navigation principale">
+      <a href="#compte" data-tab="favoris"><svg class="ico"><use href="#i-heart"/></svg>Favoris</a>
+      <a href="#messages" data-r="messages"><svg class="ico"><use href="#i-chat"/></svg>Messages<span class="badge">2</span></a>
+      <a href="#compte" data-r="compte"><svg class="ico"><use href="#i-user"/></svg>Mon compte</a>
+    </nav>
+    <a href="#deposer" class="btn btn-p btn-dep"><svg class="ico"><use href="#i-plus"/></svg>Déposer une annonce</a>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <div class="wrap">
+    <span>la Plateforme · maquette interactive · données fictives</span>
+    <span>Aide · Paiement sécurisé · Conditions · Confidentialité · Espace Pro</span>
+  </div>
+</footer>
+
+<nav class="tabbar" aria-label="Navigation mobile">
+  <a href="#accueil" data-r="accueil"><svg class="ico"><use href="#i-home"/></svg>Accueil</a>
+  <a href="#recherche" data-r="recherche"><svg class="ico"><use href="#i-search"/></svg>Rechercher</a>
+  <a href="#deposer" data-r="deposer" class="dep"><span class="plus"><svg class="ico"><use href="#i-plus"/></svg></span></a>
+  <a href="#messages" data-r="messages"><svg class="ico"><use href="#i-chat"/></svg>Messages<span class="badge">2</span></a>
+  <a href="#compte" data-r="compte"><svg class="ico"><use href="#i-user"/></svg>Compte</a>
+</nav>
+
+<button class="idx-btn" id="idxBtn" aria-expanded="false" aria-controls="idx"><svg class="ico"><use href="#i-grid"/></svg>Écrans</button>
+<div class="idx card" id="idx" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const eur=(n,d)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:d??(n%1?2:0),maximumFractionDigits:d??2}).format(n);
+const ico=(n,c='ico')=>`<svg class="${c}"><use href="#i-${n}"/></svg>`;
+const ill=(n,c='ill')=>`<svg class="${c}"><use href="#x-${n}"/></svg>`;
+const tile=['var(--t1)','var(--t2)','var(--t3)','var(--t4)'];
+
+const CATS=[
+  {k:'vehicules',n:'Véhicules',x:'car'},{k:'immobilier',n:'Immobilier',x:'house'},
+  {k:'mode',n:'Mode',x:'shirt'},{k:'maison',n:'Maison & jardin',x:'sofa'},
+  {k:'electronique',n:'Électronique',x:'phone'},{k:'loisirs',n:'Loisirs',x:'guitar'},
+  {k:'famille',n:'Famille',x:'stroller'},{k:'emploi',n:'Emploi & services',x:'work'}
+];
+const L=[
+  {id:1,t:'Vélo de ville 28 pouces, 7 vitesses, cadre aluminium',p:180,c:'Lyon 3e',km:1.2,cat:'loisirs',sub:'Vélos',x:'bike',ship:false,pro:false,d:"Aujourd'hui, 09:12",boost:true,bg:0,lx:47,ly:46},
+  {id:2,t:'Canapé 3 places en velours vert sapin',p:350,c:'Villeurbanne',km:4.8,cat:'maison',sub:'Ameublement',x:'sofa',ship:false,pro:false,d:"Aujourd'hui, 08:40",bg:1,lx:63,ly:36},
+  {id:3,t:'iPhone 13 128 Go, très bon état, batterie 89 %',p:390,c:'Lyon 7e',km:2.1,cat:'electronique',sub:'Téléphones',x:'phone',ship:true,pro:false,d:'Hier, 21:05',bg:2,lx:44,ly:60},
+  {id:4,t:'Citadine essence 2019, 48 000 km, 1re main',p:11900,c:'Vénissieux',km:8.5,cat:'vehicules',sub:'Voitures',x:'car',ship:false,pro:true,d:'Hier, 18:30',bg:3,lx:52,ly:78},
+  {id:5,t:'T2 lumineux 42 m² avec balcon, proche métro',p:780,u:'/mois',c:'Lyon 6e',km:1.9,cat:'immobilier',sub:'Locations',x:'house',ship:false,pro:true,d:'Hier, 16:02',bg:0,lx:56,ly:38},
+  {id:6,t:'Veste en jean brut, taille M, portée deux fois',p:25,c:'Lyon 1er',km:1.0,cat:'mode',sub:'Vêtements',x:'shirt',ship:true,pro:false,d:'Hier, 11:47',bg:2,lx:46,ly:34},
+  {id:7,t:'Guitare folk débutant + housse et accordeur',p:120,c:'Caluire-et-Cuire',km:5.3,cat:'loisirs',sub:'Instruments',x:'guitar',ship:true,pro:false,d:'15 nov., 19:20',bg:1,lx:44,ly:18},
+  {id:8,t:'Poussette 3 en 1 avec nacelle et cosy',p:140,c:'Bron',km:6.7,cat:'famille',sub:'Puériculture',x:'stroller',ship:false,pro:false,d:'15 nov., 14:03',bg:3,lx:74,ly:56},
+  {id:9,t:'Table en chêne massif, 6 personnes',p:260,c:'Écully',km:7.4,cat:'maison',sub:'Ameublement',x:'table',ship:false,pro:false,d:'14 nov., 10:15',bg:1,lx:18,ly:34},
+  {id:10,t:'Console de salon + 2 manettes + 3 jeux',p:210,c:'Lyon 8e',km:3.6,cat:'electronique',sub:'Consoles',x:'game',ship:true,pro:false,d:'14 nov., 09:00',bg:2,lx:60,ly:64},
+  {id:11,t:'Lot de 12 livres jeunesse 8-12 ans',p:15,c:'Oullins',km:6.0,cat:'famille',sub:'Livres',x:'book',ship:true,pro:false,d:'13 nov., 17:42',bg:0,lx:34,ly:72},
+  {id:12,t:'Trottinette électrique 25 km/h, autonomie 30 km',p:230,c:'Lyon 9e',km:3.1,cat:'loisirs',sub:'Mobilité',x:'scooter',ship:true,pro:true,d:'13 nov., 08:30',bg:3,lx:30,ly:40}
+];
+const S={cur:1,favs:new Set([3,7]),view:'grille',depStep:0,depDone:false,deliv:'relais',relay:0,paid:false,conv:0,open:false,tab:'annonces',offer:null,thumb:0,cat:null,maxKm:10,ship:false,priceMax:''};
+const byId=id=>L.find(l=>l.id===id);
+const price=l=>eur(l.p)+(l.u||'');
+
+const card=l=>`<article class="lc" data-go="${l.id}" tabindex="0" aria-label="${l.t}, ${price(l)}">
+  <div class="ph" style="background:${tile[l.bg]}">${ill(l.x)}
+    <button class="fav ${S.favs.has(l.id)?'on':''}" data-fav="${l.id}" aria-label="Ajouter aux favoris">${ico('heart')}</button>
+    <div class="tags">${l.boost?'<span class="pill sun">À la une</span>':''}${l.ship?'<span class="pill">'+ico('truck','ico" style="width:13px;height:13px')+'Livraison</span>':''}${l.pro?'<span class="pill">Pro</span>':''}</div>
+  </div>
+  <h3>${l.t}</h3>
+  <div class="pr num">${price(l)}</div>
+  <div class="meta">${ico('pin','ico" style="width:14px;height:14px')}${l.c} · ${String(l.km).replace('.',',')} km</div>
+  <div class="meta">${l.d}</div>
+</article>`;
+
+/* ---------- Écrans ---------- */
+const R={};
+
+R.accueil=()=>`
+<section class="hero"><div class="wrap">
+  <div class="eyebrow">Petites annonces près de chez vous</div>
+  <h1>Achetez et vendez <span>autour de vous</span>, en toute confiance.</h1>
+  <p class="lead">Plus de 2 millions d'annonces de particuliers et de pros. Paiement sécurisé, livraison en point relais ou remise en main propre.</p>
+  <form class="bigsearch" id="bigsearch" role="search">
+    <label class="seg">${ico('search')}<div><small>Quoi ?</small><input id="q" placeholder="Ex. vélo, canapé, T2…" value=""></div></label>
+    <label class="seg">${ico('pin')}<div><small>Où ?</small><input id="where" value="Lyon (69)"></div></label>
+    <label class="seg"><div><small>Rayon</small><select id="radius"><option>5 km</option><option selected>10 km</option><option>30 km</option><option>50 km</option></select></div></label>
+    <button class="btn btn-p" type="submit">${ico('search')}Rechercher</button>
+  </form>
+  <div class="quick"><span class="small muted" style="align-self:center">Populaire :</span>${['Vélo','iPhone','Canapé','Appartement','Poussette'].map(q=>`<a class="chip" href="#recherche">${q}</a>`).join('')}</div>
+</div></section>
+<div class="wrap screen stack">
+  <section>
+    <div class="sec-h"><h2>Catégories</h2></div>
+    <div class="cats">${CATS.map((c,i)=>`<a class="cat" href="#recherche" data-cat="${c.k}"><span class="ci" style="background:${tile[i%4]}"><svg><use href="#x-${c.x}"/></svg></span>${c.n}</a>`).join('')}</div>
+  </section>
+  <section>
+    <div class="sec-h"><h2>Près de chez vous, à Lyon</h2><a class="btn btn-g" href="#recherche">Tout voir ${ico('right')}</a></div>
+    <div class="grid-l">${L.slice(0,10).map(card).join('')}</div>
+  </section>
+  <section class="trust">
+    <div class="card"><span class="ti">${ico('shield')}</span><div><h3>Paiement sécurisé</h3><p class="muted small">Votre argent est bloqué jusqu'à ce que vous confirmiez la réception. Remboursé en cas de problème.</p></div></div>
+    <div class="card"><span class="ti">${ico('truck')}</span><div><h3>Livraison ou main propre</h3><p class="muted small">Point relais dès 3,90 €, à domicile, ou rencontre avec un code de remise à 6 chiffres.</p></div></div>
+    <div class="card"><span class="ti">${ico('star')}</span><div><h3>Profils vérifiés et notés</h3><p class="muted small">Téléphone vérifié, avis après chaque transaction, modération de chaque annonce.</p></div></div>
+  </section>
+  <section class="pro-band">
+    <div><h3>Vous êtes un professionnel ?</h3><p>Ouvrez votre boutique, importez votre stock et suivez vos statistiques.</p></div>
+    <a class="btn" href="#pro">Découvrir l'Espace Pro ${ico('right')}</a>
+  </section>
+</div>`;
+
+const mapSVG=(items,big)=>`<svg viewBox="0 0 100 ${big?62.5:40}" preserveAspectRatio="xMidYMid slice" aria-label="Carte des annonces">
+  <rect width="100" height="100" fill="var(--map-land)"/>
+  <path d="M38 -2 C34 14 42 22 36 34 S30 52 38 66" stroke="var(--map-water)" stroke-width="5" fill="none"/>
+  <path d="M64 -2 C58 10 54 20 56 30 S52 48 48 66" stroke="var(--map-water)" stroke-width="3.5" fill="none"/>
+  <rect x="64" y="8" width="16" height="11" rx="3" fill="var(--map-park)"/>
+  <rect x="10" y="44" width="12" height="9" rx="3" fill="var(--map-park)"/>
+  <g stroke="var(--map-road)" stroke-width="1.6" fill="none">
+    <path d="M0 26 H100"/><path d="M0 40 C30 38 60 44 100 42"/><path d="M20 0 L28 70"/><path d="M78 0 L70 70"/><path d="M0 12 C40 16 60 8 100 14"/><path d="M50 0 V70"/>
+  </g>
+  ${big?`<circle cx="47" cy="30" r="22" fill="var(--accent)" fill-opacity=".07" stroke="var(--accent)" stroke-width=".4" stroke-dasharray="1.5 1"/>`:''}
+  ${items.map(l=>{const y=big?l.ly*.62:20;const x=big?l.lx:50;const w=Math.max(9,price(l).length*1.55);return `<g class="mpin ${S.cur===l.id&&big?'on':''}" data-pin="${l.id}" transform="translate(${x-w/2} ${y-3.2})"><rect width="${w}" height="6.4" rx="3.2" style="stroke-width:.25"/><text x="${w/2}" y="4.4" text-anchor="middle" style="font-size:3.1px">${big?price(l).replace('/mois',''):''}</text></g>`}).join('')}
+  ${!big?`<g transform="translate(50 20)"><circle r="6" fill="var(--accent)" fill-opacity=".15"/><circle r="2.2" fill="var(--accent)"/></g>`:''}
+</svg>`;
+
+const filtered=()=>L.filter(l=>(!S.cat||l.cat===S.cat)&&l.km<=S.maxKm&&(!S.ship||l.ship)&&(!S.priceMax||l.p<=+S.priceMax));
+
+R.recherche=()=>{
+  const items=filtered();const catN=S.cat?CATS.find(c=>c.k===S.cat).n:'Toutes catégories';
+  return `<div class="wrap screen">
+  <div class="mfilters"><button class="chip" data-toast="Filtres complets sur mobile : feuille plein écran">${ico('sliders')}Filtres</button>${CATS.slice(0,6).map(c=>`<button class="chip ${S.cat===c.k?'on':''}" data-setcat="${c.k}">${c.n}</button>`).join('')}<button class="chip ${S.ship?'on':''}" data-ship="1">Livraison possible</button></div>
+  <div class="res">
+    <aside class="filters card" aria-label="Filtres">
+      <div><h4>Catégorie</h4><select class="inp" id="fcat"><option value="">Toutes catégories</option>${CATS.map(c=>`<option value="${c.k}" ${S.cat===c.k?'selected':''}>${c.n}</option>`).join('')}</select></div>
+      <div><h4>Localisation</h4><input class="inp" id="floc" value="Lyon (69)"><label class="small muted" for="fkm" style="display:flex;justify-content:space-between;margin-top:12px"><span>Rayon</span><b class="num" id="kmv" style="color:var(--fg)">${S.maxKm} km</b></label><input type="range" class="range" id="fkm" min="1" max="50" value="${S.maxKm}"></div>
+      <div><h4>Prix</h4><div class="row2"><input class="inp" placeholder="Min" inputmode="numeric" id="pmin"><input class="inp" placeholder="Max" inputmode="numeric" id="pmax" value="${S.priceMax}"></div></div>
+      <div><h4>Options</h4>
+        <label class="chk"><input type="checkbox" id="fship" ${S.ship?'checked':''}>Livraison possible</label>
+        <label class="chk"><input type="checkbox" id="fsecure" checked>Paiement sécurisé</label>
+        <label class="chk"><input type="checkbox" id="fpart" checked>Particuliers</label>
+        <label class="chk"><input type="checkbox" id="fpro" checked>Professionnels</label>
+      </div>
+      <button class="btn btn-s btn-block" data-toast="Alerte créée : vous serez prévenu·e chaque jour">${ico('bell')}Créer une alerte</button>
+    </aside>
+    <section style="min-width:0">
+      <div class="res-top">
+        <div><h1>${catN} à Lyon</h1><p class="muted small num">${items.length} annonce${items.length>1?'s':''} dans un rayon de ${S.maxKm} km</p></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <select class="inp" style="width:auto;padding:8px 12px" id="sort" aria-label="Trier"><option>Plus récentes</option><option>Plus proches</option><option>Prix croissant</option><option>Prix décroissant</option></select>
+          <div class="seg-t" role="tablist"><button class="${S.view==='grille'?'on':''}" data-view="grille">${ico('list')}Liste</button><button class="${S.view==='carte'?'on':''}" data-view="carte">${ico('map')}Carte</button></div>
+        </div>
+      </div>
+      ${S.view==='carte'?`<div class="mapbox">${mapSVG(items,true)}${(()=>{const l=byId(S.cur)||items[0];return l?`<div class="map-card card" data-go="${l.id}"><div class="ph" style="background:${tile[l.bg]}">${ill(l.x,'')}</div><div style="min-width:0"><b class="small" style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${l.t}</b><div style="font-family:var(--f-display);font-weight:700">${price(l)}</div><div class="small muted">${l.c} · ${String(l.km).replace('.',',')} km</div></div></div>`:''})()}</div>`:
+      items.length?`<div class="grid-l">${items.map(card).join('')}</div>`:`<div class="card" style="padding:40px;text-align:center;display:grid;gap:10px;justify-items:center"><h3>Aucune annonce avec ces filtres</h3><p class="muted">Élargissez le rayon ou retirez un filtre.</p><button class="btn btn-s" data-reset="1">Réinitialiser les filtres</button></div>`}
+    </section>
+  </div></div>`;
+};
+
+R.annonce=()=>{
+  const l=byId(S.cur);const cat=CATS.find(c=>c.k===l.cat);const fav=S.favs.has(l.id);
+  return `<div class="wrap screen has-cta">
+  <nav class="crumbs"><a href="#accueil">Accueil</a>›<a href="#recherche" data-cat="${l.cat}">${cat.n}</a>›<span>${l.sub}</span></nav>
+  <div class="detail">
+    <div style="min-width:0">
+      <div class="gallery">
+        <div class="main" style="background:${tile[(l.bg+S.thumb)%4]}">${ill(l.x)}<span class="count">${ico('camera','ico" style="width:15px;height:15px')}${S.thumb+1} / 5</span></div>
+        <div class="thumbs">${[0,1,2,3,4].map(i=>`<button class="${S.thumb===i?'on':''}" data-thumb="${i}" style="background:${tile[(l.bg+i)%4]}" aria-label="Photo ${i+1}">${ill(l.x,'')}</button>`).join('')}</div>
+      </div>
+      <div class="dinfo">
+        <section><h2 style="margin-bottom:10px">Description</h2><p style="max-width:65ch">Vendu car déménagement. ${l.x==='bike'?"Vélo utilisé pour aller au travail pendant deux ans, révisé en septembre (freins et chaîne neufs). Éclairage dynamo, porte-bagages et béquille. Quelques rayures sur le garde-boue arrière, rien de gênant. Antivol en U offert.":"Très bon état, peu servi, visible sur rendez-vous. Photos non retouchées, je réponds rapidement aux messages."}</p></section>
+        <section><h2 style="margin-bottom:10px">Caractéristiques</h2>
+          <dl class="attrs" style="margin:0">${(l.x==='bike'?[['État','Très bon état'],['Type','Vélo de ville'],['Taille de roue','28 pouces'],['Taille de cadre','M (54 cm)'],['Vitesses','7'],['Matière','Aluminium']]:[['État','Très bon état'],['Catégorie',l.sub],['Livraison',l.ship?'Possible':'Main propre'],['Vendeur',l.pro?'Professionnel':'Particulier']]).map(a=>`<div><dt>${a[0]}</dt><dd>${a[1]}</dd></div>`).join('')}</dl></section>
+        <section><h2 style="margin-bottom:10px">Localisation</h2><div class="minimap">${mapSVG([],false)}</div><p class="small muted" style="margin-top:8px">${l.c} · à ${String(l.km).replace('.',',')} km de vous. L'adresse exacte n'est jamais affichée.</p></section>
+        <p class="small"><a href="#annonce" data-toast="Signalement envoyé à l'équipe de modération" style="color:var(--muted);display:inline-flex;gap:6px;align-items:center">${ico('flag','ico" style="width:15px;height:15px')}Signaler cette annonce</a></p>
+      </div>
+    </div>
+    <aside class="buybox card">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+        <div style="display:grid;gap:6px">${l.boost?'<span class="pill sun" style="justify-self:start">À la une</span>':''}<h1>${l.t}</h1></div>
+        <button class="icon-btn fav-d ${fav?'on':''}" data-fav="${l.id}" aria-label="Favori" style="${fav?'color:var(--danger)':''}"><svg class="ico" style="${fav?'fill:currentColor':''}"><use href="#i-heart"/></svg></button>
+      </div>
+      <div class="price num">${price(l)}</div>
+      <p class="small muted">${l.d} · ${l.c}</p>
+      ${l.cat!=='immobilier'&&l.cat!=='emploi'?`<div style="display:grid;gap:10px">
+        <a class="btn btn-p btn-block" href="#paiement">${ico('lock')}Acheter</a>
+        <div class="row2"><button class="btn btn-s" data-offer="1">${ico('tag')}Faire une offre</button><a class="btn btn-s" href="#messages">${ico('chat')}Message</a></div>
+      </div>
+      <div class="prot">${ico('shield')}<div><b>Protection acheteur incluse</b><br><span class="muted">Remboursé si l'objet n'arrive pas ou ne correspond pas à l'annonce.</span></div></div>`:`<a class="btn btn-p btn-block" href="#messages">${ico('chat')}Contacter l'annonceur</a>`}
+      <hr style="border:0;border-top:1px solid var(--line);margin:0">
+      <div class="seller">
+        <span class="av">${l.pro?'AU':'CM'}</span>
+        <div style="flex:1;min-width:0"><b>${l.pro?'Auto Rhône Services':'Camille M.'}</b> ${l.pro?'<span class="pill info">Pro</span>':''}<div class="small muted" style="display:flex;gap:6px;align-items:center"><span class="stars">${ico('star')}${ico('star')}${ico('star')}${ico('star')}${ico('star')}</span>4,9 · 37 avis</div></div>
+      </div>
+      <div class="small muted" style="display:grid;gap:4px">
+        <span>${ico('check','ico" style="width:15px;height:15px;vertical-align:-3px;color:var(--accent)')} Téléphone et identité vérifiés</span>
+        <span>${ico('chat','ico" style="width:15px;height:15px;vertical-align:-3px')} Répond en moins d'une heure (98 %)</span>
+        <span>${ico('user','ico" style="width:15px;height:15px;vertical-align:-3px')} Membre depuis mars 2021</span>
+      </div>
+    </aside>
+  </div>
+  <section style="margin-top:44px"><div class="sec-h"><h2>Annonces similaires</h2></div><div class="grid-l">${L.filter(x=>x.id!==l.id).slice(5,9).map(card).join('')}</div></section>
+  ${l.cat!=='immobilier'?`<div class="mob-cta"><button class="btn btn-s" data-offer="1">Faire une offre</button><a class="btn btn-p" href="#paiement">Acheter ${eur(l.p)}</a></div>`:''}
+</div>`;
+};
+
+R.deposer=()=>{
+  const st=['Photos','Description','Prix et livraison','Publication'];
+  if(S.depDone) return `<div class="wrap screen"><div class="dep"><div class="card success">
+    <span class="big">${ico('check')}</span><h1>Votre annonce est envoyée</h1>
+    <p class="muted" style="max-width:46ch">Elle est vérifiée par notre équipe et sera en ligne d'ici quelques minutes. Vous recevrez une notification.</p>
+    <div class="ai" style="text-align:left;max-width:460px">${ico('rocket')}<div><b>Vendez jusqu'à 3 fois plus vite</b>L'option « À la une » place votre annonce en tête des résultats pendant 7 jours pour 4,99 €.</div></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><a class="btn btn-p" href="#compte">Voir mes annonces</a><button class="btn btn-s" data-newdep="1">Déposer une autre annonce</button></div>
+  </div></div></div>`;
+  const s=S.depStep;let body='';
+  if(s===0) body=`<div><h2 style="font-size:20px">Ajoutez des photos</h2><p class="muted small">Jusqu'à 30 photos. La première sera la photo de couverture.</p></div>
+    <div class="drop" data-toast="Sélecteur de fichiers (maquette)">${ico('upload','ico" style="width:30px;height:30px')}<b>Glissez vos photos ici</b><span class="small">ou cliquez pour parcourir · JPG, PNG, HEIC</span></div>
+    <div class="photos">${[0,1,2].map(i=>`<div class="p" style="background:${tile[i]}">${ill('bike','')}${i===0?'<span class="pill ok cov">Couverture</span>':''}</div>`).join('')}<div class="p" style="border:2px dashed var(--line);color:var(--muted)">${ico('plus')}</div></div>`;
+  if(s===1) body=`<div><h2 style="font-size:20px">Décrivez votre objet</h2><p class="muted small">Un titre précis attire plus d'acheteurs.</p></div>
+    <div class="field"><label for="dt">Titre</label><input class="inp" id="dt" value="Vélo de ville 28 pouces, 7 vitesses"></div>
+    <div class="ai">${ico('spark')}<div><b>Catégorie suggérée : Loisirs › Vélos</b>Nous l'avons détectée à partir de vos photos et du titre. <a href="#deposer" class="btn-g" style="padding:0;font-weight:600" data-toast="Choix manuel de la catégorie">Changer</a></div></div>
+    <div class="row2"><div class="field"><label for="dtype">Type de vélo</label><select class="inp" id="dtype"><option>Vélo de ville</option><option>VTT</option><option>Route</option><option>Électrique</option></select></div>
+    <div class="field"><label for="detat">État</label><select class="inp" id="detat"><option>Neuf</option><option selected>Très bon état</option><option>Bon état</option><option>Satisfaisant</option></select></div></div>
+    <div class="field"><label for="dd">Description</label><textarea class="inp" id="dd">Vélo utilisé pour aller au travail pendant deux ans, révisé en septembre (freins et chaîne neufs). Éclairage dynamo, porte-bagages et béquille.</textarea></div>`;
+  if(s===2) body=`<div><h2 style="font-size:20px">Prix et remise</h2></div>
+    <div class="field"><label for="dp">Votre prix</label><div class="money-inp"><input id="dp" inputmode="numeric" value="180"><b style="font-size:22px">€</b></div></div>
+    <div class="ai">${ico('spark')}<div><b>Prix conseillé : 160 € à 200 €</b>Basé sur 214 vélos de ville similaires vendus près de Lyon ces 3 derniers mois.</div></div>
+    <div class="field"><label>Mode de remise</label><div class="opts">
+      <label class="opt on" data-optg="dep">${'<span class="oi">'+ico('hand')+'</span>'}<span class="grow"><b>Remise en main propre</b><span class="small muted">L'acheteur peut payer en ligne et vous donner un code à la remise.</span></span><span class="rad"></span></label>
+      <label class="opt" data-optg="dep">${'<span class="oi">'+ico('box')+'</span>'}<span class="grow"><b>Envoi en point relais</b><span class="small muted">Colis de plus de 30 kg non accepté pour cette catégorie.</span></span><span class="rad"></span></label>
+    </div></div>`;
+  if(s===3) body=`<div><h2 style="font-size:20px">Dernière étape</h2><p class="muted small">Vérifiez votre localisation et publiez.</p></div>
+    <div class="field"><label for="dloc">Localisation</label><input class="inp" id="dloc" value="Lyon 3e (69003)"></div>
+    <p class="small muted">Seule la ville est affichée. Votre adresse reste privée.</p>
+    <div class="card" style="padding:14px;display:flex;gap:14px;align-items:center;background:var(--surface-2);border:0">
+      <div style="width:84px;height:64px;border-radius:10px;background:var(--t1);display:grid;place-items:center;color:var(--tile-ink);flex:none"><svg style="width:34px;height:34px;stroke:currentColor;fill:none;stroke-width:1.5"><use href="#x-bike"/></svg></div>
+      <div style="min-width:0"><b>Vélo de ville 28 pouces, 7 vitesses</b><div style="font-family:var(--f-display);font-weight:700;font-size:18px">180 €</div><div class="small muted">Loisirs › Vélos · Lyon 3e · Main propre</div></div>
+    </div>
+    <label class="chk"><input type="checkbox" checked id="dphone">Masquer mon numéro de téléphone</label>`;
+  return `<div class="wrap screen"><div class="dep">
+    <h1 style="font-size:30px">Déposer une annonce</h1>
+    <div class="steps">${st.map((n,i)=>`<div class="${i<s?'done':i===s?'on':''}">${n}</div>`).join('')}</div>
+    <div class="card">${body}</div>
+    <div class="dep-nav"><button class="btn btn-s" data-dep="-1" ${s===0?'disabled':''}>${ico('left')}Retour</button>
+    <button class="btn btn-p" data-dep="1">${s===3?'Publier mon annonce':'Continuer'}${s<3?ico('right'):''}</button></div>
+  </div></div>`;
+};
+
+const CONVS=[
+  {who:'Camille M.',av:'CM',l:1,unread:true,msgs:[
+    {d:"Aujourd'hui"},{me:true,t:"Bonjour, le vélo est-il toujours disponible ? Je suis à Lyon 3e aussi.",h:'09:31'},
+    {t:"Bonjour ! Oui, toujours disponible. Vous pouvez passer l'essayer ce soir après 18 h.",h:'09:44'},
+    {offer:160,status:'attente',me:true,h:'09:46'},
+    {t:"Je regarde votre offre et je vous réponds dans la matinée 🙂",h:'09:52'}]},
+  {who:'Julien R.',av:'JR',l:3,unread:true,msgs:[{d:'Hier'},{t:"L'iPhone est parti au point relais, voici le numéro de suivi : 6A2843 117 FR.",h:'18:20'}]},
+  {who:'Auto Rhône Services',av:'AU',l:4,msgs:[{d:'15 nov.'},{t:"Le véhicule est visible du lundi au samedi, 9 h à 19 h. Essai possible sur rendez-vous.",h:'11:02'}]},
+  {who:'Inès B.',av:'IB',l:7,msgs:[{d:'13 nov.'},{me:true,t:'Merci, la guitare est parfaite !',h:'20:14'}]}
+];
+R.messages=()=>{
+  const c=CONVS[S.conv];const l=byId(c.l);
+  const last=m=>{const x=[...m].reverse().find(y=>y.t||y.offer);return x.offer?`Offre : ${eur(x.offer)}`:x.t};
+  return `<div class="wrap screen msgs"><div class="msg card ${S.open?'open':''}">
+  <div class="clist"><h2>Messages</h2>${CONVS.map((v,i)=>{const lv=byId(v.l);return `<div class="ci-row ${i===S.conv?'on':''} ${v.unread?'unread':''}" data-conv="${i}" tabindex="0"><span class="th" style="background:${tile[lv.bg]}">${ill(lv.x,'')}</span><div class="grow"><div class="l1"><span>${v.who}</span><span class="small muted" style="font-weight:400">${v.msgs[0].d}</span></div><div class="l2">${lv.t}</div><div class="l3">${last(v.msgs)}</div></div></div>`}).join('')}</div>
+  <div class="thread">
+    <div class="th-h"><button class="back" data-back="1" aria-label="Retour">${ico('left')}</button><span class="av" style="width:38px;height:38px;font-size:14px">${c.av}</span><div class="grow"><b>${c.who}</b><div class="small muted">En ligne · répond en général en moins d'une heure</div></div><button class="icon-btn" data-toast="Options : signaler, bloquer, archiver" aria-label="Options">${ico('flag')}</button></div>
+    <div class="th-listing"><span style="width:44px;height:36px;border-radius:8px;background:${tile[l.bg]};display:grid;place-items:center;color:var(--tile-ink);flex:none"><svg style="width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5"><use href="#x-${l.x}"/></svg></span><div class="grow"><b style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${l.t}</b><span class="muted">${price(l)}</span></div><a class="btn btn-p btn-sm" href="#paiement" data-go-pay="${l.id}">Acheter</a></div>
+    <div class="bubbles" id="bubbles">${c.msgs.map(m=>m.d?`<div class="day">${m.d}</div>`:m.offer?`<div class="offer-card" style="${m.me?'align-self:flex-end':''}"><span class="eyebrow">${m.me?'Votre offre':'Offre reçue'}</span><div class="amt num">${eur(m.offer)}</div><span class="small muted">au lieu de ${price(l)} · expire dans 47 h</span>${m.status==='attente'?`<span class="pill warn" style="justify-self:start"><span class="dot"></span>En attente de réponse</span>`:m.status==='acceptee'?`<span class="pill ok" style="justify-self:start"><span class="dot"></span>Offre acceptée</span><a class="btn btn-p btn-sm" href="#paiement">Payer ${eur(m.offer)}</a>`:''}${m.status==='attente'?`<div class="acts"><button class="btn btn-s btn-sm" data-simaccept="1">Simuler l'acceptation</button></div>`:''}</div>`:`<div class="bub ${m.me?'me':'them'}">${m.t}<time>${m.h}</time></div>`).join('')}</div>
+    <div class="safety">${ico('shield','ico" style="width:13px;height:13px;vertical-align:-2px')} Restez sur la Plateforme pour payer : vous êtes protégé·e. Ne communiquez jamais vos codes bancaires.</div>
+    <form class="compose" id="compose"><button type="button" class="icon-btn" aria-label="Ajouter une photo">${ico('camera')}</button><input id="msgin" placeholder="Écrire un message…" autocomplete="off" aria-label="Message"><button class="icon-btn p" aria-label="Envoyer">${ico('send')}</button></form>
+  </div></div></div>`;
+};
+
+R.paiement=()=>{
+  const l=byId(S.cur);const base=S.offer||l.p;
+  const ship={relais:3.9,domicile:6.9,main:0}[S.deliv];
+  const prot=Math.round((0.7+base*0.05)*100)/100;const tot=base+ship+prot;
+  if(S.paid) return `<div class="wrap screen"><div class="dep"><div class="card success">
+    <span class="big">${ico('lock')}</span><h1>Paiement confirmé</h1>
+    <p class="muted" style="max-width:48ch">${eur(tot,2)} sont bloqués en sécurité. ${S.deliv==='main'?"Donnez votre code de remise au vendeur uniquement quand vous avez l'objet en main.":"Le vendeur a 5 jours pour expédier le colis."}</p>
+    ${S.deliv==='main'?`<div class="card" style="padding:16px 28px;background:var(--surface-2);border:0"><span class="eyebrow">Code de remise</span><div style="font-family:var(--f-display);font-size:34px;font-weight:800;letter-spacing:.18em" class="num">482 917</div></div>`:''}
+    <div class="timeline">
+      <div class="tl done"><span class="b">${ico('check')}</span><div><b>Paiement bloqué</b><span class="small muted">Aujourd'hui, ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div></div>
+      <div class="tl now"><span class="b"></span><div><b>${S.deliv==='main'?'Remise en main propre':'Expédition par le vendeur'}</b><span class="small muted">${S.deliv==='main'?'Rendez-vous convenu dans la messagerie':'Suivi du colis dans votre espace'}</span></div></div>
+      <div class="tl"><span class="b"></span><div><b>Vous confirmez la réception</b><span class="small muted">Vous avez 72 h pour signaler un problème</span></div></div>
+      <div class="tl"><span class="b"></span><div><b>Le vendeur est payé</b><span class="small muted">Seulement après votre confirmation</span></div></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><a class="btn btn-p" href="#compte" data-tabgo="achats">Suivre ma commande</a><a class="btn btn-s" href="#messages">Écrire au vendeur</a></div>
+  </div></div></div>`;
+  const RL=[['Relais Tabac Presse Guillotière','12 rue de Marseille · 350 m'],['Épicerie du Pont','4 cours Gambetta · 600 m'],['Locker Gare Part-Dieu','Accès 24 h/24 · 1,1 km']];
+  return `<div class="wrap screen">
+  <a href="#annonce" class="btn btn-g" style="padding-left:0;margin-bottom:8px">${ico('left')}Retour à l'annonce</a>
+  <h1 style="font-size:30px;margin-bottom:22px">Paiement sécurisé</h1>
+  <div class="co">
+    <div style="display:grid;gap:16px;min-width:0">
+      <section class="card"><h2>1. Mode de livraison</h2><div class="opts">
+        ${[['relais','box','Point relais','2 à 4 jours ouvrés',3.9],['domicile','truck','Livraison à domicile','2 à 3 jours ouvrés',6.9],['main','hand','Remise en main propre','Code à donner au vendeur à la remise',0]].map(o=>`<label class="opt ${S.deliv===o[0]?'on':''}" data-deliv="${o[0]}"><span class="oi">${ico(o[1])}</span><span class="grow"><b>${o[2]}</b><span class="small muted">${o[3]}</span></span><b class="num">${o[4]?eur(o[4],2):'Gratuit'}</b><span class="rad"></span></label>`).join('')}
+      </div>
+      ${S.deliv==='relais'?`<div class="field"><label>Choisir un point relais près de Lyon 3e</label><div class="relays">${RL.map((r,i)=>`<div class="relay ${S.relay===i?'on':''}" data-relay="${i}"><span><b>${r[0]}</b><br><span class="muted">${r[1]}</span></span>${S.relay===i?ico('check','ico" style="color:var(--accent)'):''}</div>`).join('')}</div></div>`:''}
+      ${S.deliv==='domicile'?`<div class="field"><label for="addr">Adresse de livraison</label><input class="inp" id="addr" value="18 rue Paul Bert, 69003 Lyon"></div>`:''}
+      </section>
+      <section class="card"><h2>2. Paiement</h2>
+        <div class="field"><label for="cn">Numéro de carte</label><input class="inp num" id="cn" value="4970 1012 3456 7890" inputmode="numeric"></div>
+        <div class="cardrow"><div class="field"><label for="cnm">Titulaire</label><input class="inp" id="cnm" value="Léa M."></div><div class="field"><label for="cex">Expiration</label><input class="inp num" id="cex" value="08/28"></div><div class="field"><label for="cvc">CVC</label><input class="inp num" id="cvc" value="•••"></div></div>
+        <p class="small muted">${ico('lock','ico" style="width:14px;height:14px;vertical-align:-2px')} Paiement chiffré, validé par votre banque (3-D Secure). Le vendeur ne voit jamais vos données bancaires.</p>
+      </section>
+    </div>
+    <aside class="card sum">
+      <div class="sum-item"><span class="ph" style="background:${tile[l.bg]}">${ill(l.x,'')}</span><div style="min-width:0"><b style="display:block;font-size:14px">${l.t}</b><span class="small muted">Vendu par Camille M. · ${l.c}</span></div></div>
+      <div class="lines num">
+        <div><span>Prix de l'article${S.offer?' (offre acceptée)':''}</span><span>${eur(base,2)}</span></div>
+        <div><span>Livraison</span><span>${ship?eur(ship,2):'Gratuit'}</span></div>
+        <div><span>Protection acheteur <span class="muted small">(0,70 € + 5 %)</span></span><span>${eur(prot,2)}</span></div>
+        <div class="tot"><span>Total</span><span>${eur(tot,2)}</span></div>
+      </div>
+      <button class="btn btn-p btn-block" data-pay="1">${ico('lock')}Payer ${eur(tot,2)}</button>
+      <div class="prot">${ico('shield')}<div><b>Votre argent est protégé</b><br><span class="muted">Le vendeur n'est payé qu'après votre confirmation de réception. En cas de problème, vous êtes remboursé·e.</span></div></div>
+    </aside>
+  </div></div>`;
+};
+
+R.compte=()=>{
+  const T=[['annonces','Mes annonces'],['achats','Achats et ventes'],['portemonnaie','Porte-monnaie'],['favoris','Favoris et alertes']];
+  let body='';
+  if(S.tab==='annonces'){const my=[[1,'ok','En ligne',412,14],[9,'warn','En modération',0,0],[7,'info','Vendue',188,9],[11,'','Expirée',96,2]];
+    body=`<div class="sec-h"><h2 style="font-size:18px">4 annonces</h2><a class="btn btn-p btn-sm" href="#deposer">${ico('plus')}Déposer une annonce</a></div><div class="mylist">${my.map(m=>{const l=byId(m[0]);return `<div class="my card"><span class="ph" style="background:${tile[l.bg]}">${ill(l.x,'')}</span><div class="grow"><b>${l.t}</b><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px"><span class="pill ${m[1]}"><span class="dot"></span>${m[2]}</span><span class="num" style="font-weight:600">${price(l)}</span></div><div class="st num" style="margin-top:4px"><span>${m[3]} vues</span><span>${m[4]} messages</span></div></div><div class="acts">${m[2]==='En ligne'?`<button class="btn btn-s btn-sm" data-toast="Option « À la une » : 4,99 € pour 7 jours">${ico('rocket')}Booster</button><button class="btn btn-s btn-sm" data-toast="Édition de l'annonce">Modifier</button>`:m[2]==='Expirée'?`<button class="btn btn-s btn-sm" data-toast="Annonce republiée pour 60 jours">Republier</button>`:m[2]==='Vendue'?`<button class="btn btn-s btn-sm" data-toast="Merci ! Votre avis sur Inès B. est publié">${ico('star')}Noter l'acheteuse</button>`:`<span class="small muted">Vérification en cours</span>`}</div></div>`}).join('')}</div>`;}
+  if(S.tab==='achats'){const o=[[3,'Achat','Expédié','info','Suivi 6A2843 117 FR · arrivée prévue jeudi','Confirmer la réception'],[7,'Vente','Terminée','ok','Payée 120,00 € le 14 nov.',''],[10,'Achat','Litige ouvert','bad','Objet non conforme · réponse du vendeur attendue','Voir le litige']];
+    body=`<div class="mylist">${o.map(x=>{const l=byId(x[0]);return `<div class="my card"><span class="ph" style="background:${tile[l.bg]}">${ill(l.x,'')}</span><div class="grow"><span class="eyebrow">${x[1]}</span><b>${l.t}</b><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px"><span class="pill ${x[3]}"><span class="dot"></span>${x[2]}</span><span class="small muted">${x[4]}</span></div></div><div class="acts">${x[5]?`<button class="btn ${x[5].startsWith('Confirmer')?'btn-p':'btn-s'} btn-sm" data-toast="${x[5].startsWith('Confirmer')?'Réception confirmée, le vendeur va être payé':'Ouverture du dossier de litige'}">${x[5]}</button>`:''}</div></div>`}).join('')}</div>`;}
+  if(S.tab==='portemonnaie') body=`<div class="wal">
+    <div class="card"><span class="eyebrow">Solde disponible</span><div class="bal num">${eur(412.5,2)}</div><p class="small muted">${eur(180,2)} en attente de confirmation de l'acheteur</p>
+      <button class="btn btn-p" data-toast="Virement de 412,50 € demandé vers FR76 •••• 2041 · 1 à 3 jours">${ico('wallet')}Retirer vers mon compte bancaire</button>
+      <div class="small muted">IBAN FR76 •••• •••• 2041 · <span class="pill ok"><span class="dot"></span>Identité vérifiée</span></div></div>
+    <div class="card"><h3 style="font-size:16px">Derniers mouvements</h3><div>
+      ${[['Vente · Guitare folk','14 nov.','+120,00 €'],['Vente · Lot de BD','9 nov.','+32,00 €'],['Retrait vers IBAN','2 nov.','−250,00 €'],['Vente · Lampe de bureau','28 oct.','+18,50 €']].map(t=>`<div class="tx num"><span>${t[0]}<br><span class="small muted">${t[1]}</span></span><span class="${t[2][0]==='+'?'pos':''}">${t[2]}</span></div>`).join('')}
+    </div></div></div>`;
+  if(S.tab==='favoris') body=`<div class="sec-h"><h2 style="font-size:18px">Recherches sauvegardées</h2></div>
+    <div class="mylist" style="margin-bottom:30px">${[['Vélo de ville · Lyon · 10 km · max 250 €','Chaque jour','3 nouvelles'],['T2 · Lyon 6e, 7e · max 850 €/mois','Instantanée','1 nouvelle'],['Poussette · Lyon · 30 km','Chaque semaine','']].map(a=>`<div class="my card"><span class="ph" style="background:var(--accent-soft);color:var(--accent)">${ico('bell')}</span><div class="grow"><b>${a[0]}</b><span class="small muted">Alerte : ${a[1]}</span></div><div class="acts">${a[2]?`<span class="pill ok">${a[2]}</span>`:''}<a class="btn btn-s btn-sm" href="#recherche">Voir</a></div></div>`).join('')}</div>
+    <div class="sec-h"><h2 style="font-size:18px">Annonces favorites</h2></div><div class="grid-l">${L.filter(l=>S.favs.has(l.id)).map(card).join('')||'<p class="muted">Touchez le cœur sur une annonce pour la retrouver ici.</p>'}</div>`;
+  return `<div class="wrap screen">
+  <div class="prof"><span class="av">LM</span><div class="grow"><h1>Léa M.</h1><div class="facts"><span class="pill ok"><span class="dot"></span>Identité vérifiée</span><span class="pill">${ico('star','ico" style="width:13px;height:13px')}4,8 · 32 avis</span><span class="pill">Répond à 98 %</span><span class="pill">Lyon 3e</span></div></div><a class="btn btn-s" href="#pro">${ico('store')}Passer en compte Pro</a></div>
+  <div class="tabs" role="tablist">${T.map(t=>`<button class="${S.tab===t[0]?'on':''}" data-tab="${t[0]}" role="tab">${t[1]}</button>`).join('')}</div>
+  ${body}</div>`;
+};
+
+R.pro=()=>{
+  const v=[310,342,298,388,421,512,468,402,377,455,498,530,610,575];
+  const max=700,W=560,H=180,bw=W/v.length;
+  const bars=v.map((n,i)=>{const h=n/max*(H-24);return `<rect class="bar ${i%7>4?'':'wk'}" x="${i*bw+6}" y="${H-20-h}" width="${bw-12}" height="${h}" rx="4" style="${i===v.length-1?'':'opacity:'+(i%7>4?.55:1)}"/>`}).join('');
+  return `<div class="wrap screen">
+  <div class="prof"><span class="av" style="border-radius:16px;background:var(--fg);color:var(--bg)">AU</span><div class="grow"><span class="eyebrow">Espace Pro</span><h1>Auto Rhône Services</h1><div class="facts"><span class="pill info">Pro Essentiel</span><span class="pill">SIRET 812 345 678 00021</span><span class="pill">3 utilisateurs</span></div></div><a class="btn btn-s" href="#recherche">${ico('store')}Voir ma boutique</a><a class="btn btn-p" href="#deposer">${ico('plus')}Nouvelle annonce</a></div>
+  <div class="kpis">
+    ${[['Vues (30 j)','12 480','+18 %',1],['Contacts','312','+9 %',1],['Ventes','27','+4',1],['Taux de réponse','92 %','−3 pts',0]].map(k=>`<div class="kpi card"><span class="small muted">${k[0]}</span><span class="v num">${k[1]}</span><span class="d ${k[3]?'up':'down'}">${k[2]} vs mois précédent</span></div>`).join('')}
+  </div>
+  <div class="pro-g">
+    <div class="card chart"><div class="sec-h" style="margin:0"><h3>Vues des annonces, 14 derniers jours</h3><span class="small muted">week-ends en couleur pleine</span></div>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Vues par jour, de 298 à 610">
+        ${[0,200,400,600].map(g=>{const y=H-20-g/max*(H-24);return `<line class="gl" x1="0" x2="${W}" y1="${y}" y2="${y}"/><text x="0" y="${y-4}">${g}</text>`}).join('')}
+        ${bars}
+        ${['4 nov.','11 nov.','17 nov.'].map((t,i)=>`<text x="${[6,7*bw+6,W-40][i]}" y="${H-4}">${t}</text>`).join('')}
+      </svg></div>
+    <div class="card"><h3>Abonnement</h3><div><b>Pro Essentiel</b> · <span class="num">49 € HT / mois</span><div class="small muted">Renouvellement le 1er décembre</div></div>
+      <div><div class="small" style="display:flex;justify-content:space-between"><span>Annonces actives</span><b class="num">120 / 200</b></div><div class="quota" style="margin-top:6px"><i style="width:60%"></i></div></div>
+      <div class="small" style="display:grid;gap:6px"><span>${ico('check','ico" style="width:15px;height:15px;vertical-align:-3px;color:var(--accent)')} Boutique personnalisée</span><span>${ico('check','ico" style="width:15px;height:15px;vertical-align:-3px;color:var(--accent)')} Import par flux XML / API</span><span>${ico('check','ico" style="width:15px;height:15px;vertical-align:-3px;color:var(--accent)')} 5 remontées offertes par mois</span></div>
+      <button class="btn btn-s btn-sm" data-toast="Comparaison des formules Pro">Changer de formule</button></div>
+    <div class="card"><h3>Import automatique</h3><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="pill ok"><span class="dot"></span>Flux actif</span><span class="small muted">Dernière synchro aujourd'hui à 06:00</span></div>
+      <div class="lines num"><div><span>Annonces créées</span><b>8</b></div><div><span>Mises à jour</span><b>41</b></div><div><span>Rejetées</span><b class="down">2</b></div></div>
+      <button class="btn btn-s btn-sm" data-toast="Rapport : 2 annonces sans photo">Voir le rapport</button></div>
+    <div class="card"><h3>Équipe</h3><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Membre</th><th>Rôle</th></tr></thead><tbody>
+      <tr><td>Karim A.</td><td><span class="pill info">Administrateur</span></td></tr><tr><td>Sophie L.</td><td><span class="pill">Gestion des annonces</span></td></tr><tr><td>Hugo T.</td><td><span class="pill">Messagerie</span></td></tr>
+    </tbody></table></div><button class="btn btn-s btn-sm" data-toast="Invitation envoyée">${ico('plus')}Inviter un membre</button></div>
+    <div class="card" style="grid-column:1/-1"><h3>Factures</h3><div class="tbl-wrap"><table class="tbl num"><thead><tr><th>Numéro</th><th>Date</th><th>Objet</th><th>HT</th><th>TVA</th><th></th></tr></thead><tbody>
+      ${[['F-2026-1104','1 nov. 2026','Abonnement Pro Essentiel','49,00 €','9,80 €'],['F-2026-1032','18 oct. 2026','Pack 10 remontées','24,00 €','4,80 €'],['F-2026-1001','1 oct. 2026','Abonnement Pro Essentiel','49,00 €','9,80 €']].map(f=>`<tr><td>${f[0]}</td><td>${f[1]}</td><td>${f[2]}</td><td>${f[3]}</td><td>${f[4]}</td><td><button class="btn btn-g btn-sm" data-toast="Facture PDF (maquette)">PDF</button></td></tr>`).join('')}
+    </tbody></table></div></div>
+  </div></div>`;
+};
+
+/* ---------- Routeur ---------- */
+const SCREENS=[['accueil','Accueil et recherche'],['recherche','Résultats et carte'],['annonce','Fiche annonce'],['deposer','Déposer une annonce'],['messages','Messagerie et offres'],['paiement','Paiement sécurisé'],['compte','Espace utilisateur'],['pro','Espace Pro']];
+function render(){
+  let r=(location.hash||'#accueil').slice(1);if(!R[r])r='accueil';
+  $('#app').innerHTML=R[r]();
+  $('#hdr').classList.toggle('has-search',r==='recherche');
+  document.querySelectorAll('[data-r]').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
+  $('#idx').innerHTML='<div class="eyebrow" style="padding:6px 10px">Écrans de la maquette</div>'+SCREENS.map((s,i)=>`<a href="#${s[0]}" class="${s[0]===r?'on':''}">${s[1]}<span>${i+1}/8</span></a>`).join('');
+  const bb=$('#bubbles');if(bb)bb.scrollTop=bb.scrollHeight;
+  bind();
+}
+let lastR='';
+window.addEventListener('hashchange',()=>{const r=location.hash.slice(1);if(r==='deposer'&&lastR!=='deposer'){}if(r==='paiement')S.paid=false;render();if(r!==lastR)window.scrollTo(0,0);lastR=r;$('#idx').hidden=true});
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),2600)}
+
+function bind(){
+  const f=$('#bigsearch');if(f)f.onsubmit=e=>{e.preventDefault();S.cat=null;location.hash='recherche'};
+  const fc=$('#fcat');if(fc)fc.onchange=()=>{S.cat=fc.value||null;render()};
+  const fk=$('#fkm');if(fk){fk.oninput=()=>{$('#kmv').textContent=fk.value+' km'};fk.onchange=()=>{S.maxKm=+fk.value;render()}}
+  const fs=$('#fship');if(fs)fs.onchange=()=>{S.ship=fs.checked;render()};
+  const pm=$('#pmax');if(pm)pm.onchange=()=>{S.priceMax=pm.value.replace(/\D/g,'');render()};
+  const cp=$('#compose');if(cp)cp.onsubmit=e=>{e.preventDefault();const v=$('#msgin').value.trim();if(!v)return;CONVS[S.conv].msgs.push({me:true,t:v.replace(/</g,'&lt;'),h:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})});render();$('#msgin').focus()};
+}
+$('#hsearch').onsubmit=e=>{e.preventDefault();S.cat=null;location.hash='recherche';render()};
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-fav],[data-go],[data-toast],[data-cat],[data-setcat],[data-ship],[data-view],[data-pin],[data-thumb],[data-dep],[data-newdep],[data-optg],[data-conv],[data-back],[data-simaccept],[data-deliv],[data-relay],[data-pay],[data-tab],[data-tabgo],[data-offer],[data-reset],[data-go-pay]');
+  if(!t)return;const d=t.dataset;
+  if(d.fav){e.preventDefault();e.stopPropagation();const id=+d.fav;S.favs.has(id)?(S.favs.delete(id),toast('Retiré des favoris')):(S.favs.add(id),toast('Ajouté à vos favoris'));render();return}
+  if(d.toast){e.preventDefault();toast(d.toast);return}
+  if(d.go){S.cur=+d.go;S.thumb=0;S.offer=null;location.hash='annonce';return}
+  if(d.cat){S.cat=d.cat}
+  if(d.setcat){S.cat=S.cat===d.setcat?null:d.setcat;render();return}
+  if(d.ship){S.ship=!S.ship;render();return}
+  if(d.reset){S.cat=null;S.ship=false;S.maxKm=10;S.priceMax='';render();return}
+  if(d.view){S.view=d.view;render();return}
+  if(d.pin){S.cur=+d.pin;render();return}
+  if(d.thumb){S.thumb=+d.thumb;render();return}
+  if(d.dep){const n=S.depStep+(+d.dep);if(n>3){S.depDone=true}else S.depStep=Math.max(0,n);render();window.scrollTo(0,0);return}
+  if(d.newdep){S.depDone=false;S.depStep=0;render();return}
+  if(d.optg){t.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.toggle('on',o===t));return}
+  if(d.conv){S.conv=+d.conv;S.open=true;CONVS[S.conv].unread=false;render();return}
+  if(d.back){S.open=false;render();return}
+  if(d.goPay){S.cur=+d.goPay}
+  if(d.simaccept){const m=CONVS[S.conv].msgs.find(x=>x.offer);m.status='acceptee';S.cur=CONVS[S.conv].l;S.offer=m.offer;CONVS[S.conv].msgs.push({t:"C'est d'accord pour 160 €, vous pouvez payer depuis l'offre.",h:'10:05'});render();toast('Offre acceptée par le vendeur');return}
+  if(d.deliv){S.deliv=d.deliv;render();return}
+  if(d.relay){S.relay=+d.relay;render();return}
+  if(d.pay){S.paid=true;render();window.scrollTo(0,0);return}
+  if(d.tabgo){S.tab=d.tabgo}
+  if(d.tab&&!t.closest('.hnav')){S.tab=d.tab;render();return}
+  if(d.tab){S.tab=d.tab}
+  if(d.offer){openOffer();return}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=e.target.closest&&e.target.closest('[data-go],[data-conv]');if(c)c.click()}if(e.key==='Escape'){const o=$('.ov');if(o)o.remove();$('#idx').hidden=true}});
+
+function openOffer(){
+  const l=byId(S.cur);const sug=[.9,.85,.8].map(r=>Math.round(l.p*r/5)*5);
+  const ov=document.createElement('div');ov.className='ov';
+  ov.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="oft"><h3 id="oft">Faire une offre</h3><p class="small muted">Prix affiché : ${price(l)}. Le vendeur a 48 h pour accepter, refuser ou faire une contre-offre.</p>
+  <div class="offer-sugg">${sug.map((s,i)=>`<button data-s="${s}" class="${i===0?'on':''}">${eur(s)}</button>`).join('')}</div>
+  <div class="money-inp"><input id="offin" inputmode="numeric" value="${sug[0]}" aria-label="Montant de l'offre"><b style="font-size:22px">€</b></div>
+  <div style="display:flex;gap:10px"><button class="btn btn-s" style="flex:1" id="ofx">Annuler</button><button class="btn btn-p" style="flex:1" id="ofok">Envoyer l'offre</button></div></div>`;
+  document.body.appendChild(ov);
+  ov.onclick=e=>{if(e.target===ov||e.target.id==='ofx')ov.remove();const b=e.target.closest('[data-s]');if(b){ov.querySelectorAll('[data-s]').forEach(x=>x.classList.toggle('on',x===b));ov.querySelector('#offin').value=b.dataset.s}
+    if(e.target.closest('#ofok')){const v=+ov.querySelector('#offin').value||sug[0];ov.remove();toast(`Offre de ${eur(v)} envoyée au vendeur`)}};
+  ov.querySelector('#offin').focus();
+}
+const ib=$('#idxBtn');ib.onclick=()=>{const x=$('#idx');x.hidden=!x.hidden;ib.setAttribute('aria-expanded',String(!x.hidden))};
+render();lastR=(location.hash||'#accueil').slice(1);
+</script>
+
+</body></html>
